@@ -1,0 +1,33 @@
+﻿Public Static Function isFileExists(path As String) As Boolean
+
+Dim strFileName As String
+Dim strFileExists As String
+ 
+    strFileName = path
+    strFileExists = Dir(strFileName)
+ 
+   If strFileExists = "" Then
+        isFileExists = False
+    Else
+        isFileExists = True
+    End If
+ 
+End Function
+
+
+Public Static Function ifRelativeConvertToAbsolutePath(path As String) As String
+
+On Error GoTo ErrHandle
+    If Dir(ThisWorkbook.path & "\" & path, vbDirectory) = vbNullString Then
+        ' if concat two absolute path will throw error. thus this line will never be executed
+    Else
+         ifRelativeConvertToAbsolutePath = ThisWorkbook.path & "\" & path
+    End If
+    Exit Function
+    
+ErrHandle:
+        'if absolute
+         ifRelativeConvertToAbsolutePath = path
+    Exit Function
+    
+End Function

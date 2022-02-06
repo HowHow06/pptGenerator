@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<general>
+		<pptPath>D:\DDownload\PPTGenerator1.5\output.pptx</pptPath>
+		<backgroundImagePath>D:\DDownload\PPTGenerator1.5\background\NewGreenScreenBackground.png</backgroundImagePath>
+		<chineseLyricOnly enabled="-1">
+			<oneTextField enabled="-1">
+				<numberOfRow>1</numberOfRow>
+			</oneTextField>
+		</chineseLyricOnly>
+	</general>
+	<main>
+		<font>
+			<fontName>Microsoft Yahei</fontName>
+			<fontColorR>248</fontColorR>
+			<fontColorG>248</fontColorG>
+			<fontColorB>248</fontColorB>
+			<fontSize>60</fontSize>
+			<fontBold>-1</fontBold>
+			<fontBorder enabled="-1">
+				<colorR>0</colorR>
+				<colorG>0</colorG>
+				<colorB>0</colorB>
+				<weight>1.5</weight>
+			</fontBorder>
+		</font>
+		<shadow enabled="-1"></shadow>
+		<fontSpacing>0</fontSpacing>
+		<lineSpacingBefore>0</lineSpacingBefore>
+		<lineSpacingAfter>8</lineSpacingAfter>
+		<lineSpacingBetween>1</lineSpacingBetween>
+		<glow enabled="-1">
+			<size>5</size>
+			<transparency>0</transparency>
+			<colorR>0</colorR>
+			<colorG>0</colorG>
+			<colorB>0</colorB>
+		</glow>
+		<upperPosition>
+			<left>0</left>
+			<top>24.5</top>
+			<width>960</width>
+			<height>90</height>
+		</upperPosition>
+		<lowerPosition>
+			<left>0</left>
+			<top>235.06</top>
+			<width>960</width>
+			<height>90</height>
+		</lowerPosition>
+	</main>
+	<sub>
+		<font>
+			<fontName>Avenir Next LT Pro</fontName>
+			<fontColorR>0</fontColorR>
+			<fontColorG>0</fontColorG>
+			<fontColorB>0</fontColorB>
+			<fontSize>36</fontSize>
+			<fontBold>-1</fontBold>
+			<fontBorder enabled="0">
+				<colorR>0</colorR>
+				<colorG>0</colorG>
+				<colorB>0</colorB>
+				<weight>1.5</weight>
+			</fontBorder>
+		</font>
+		<shadow enabled="-1"></shadow>
+		<fontSpacing>1</fontSpacing>
+		<lineSpacingBefore>0</lineSpacingBefore>
+		<lineSpacingAfter>0</lineSpacingAfter>
+		<lineSpacingBetween>1</lineSpacingBetween>
+		<glow enabled="0">
+			<size>8</size>
+			<transparency>0</transparency>
+			<colorR>131</colorR>
+			<colorG>35</colorG>
+			<colorB>88</colorB>
+		</glow>
+		<upperPosition>
+			<left>0</left>
+			<top>179.33</top>
+			<width>960</width>
+			<height>50.9</height>
+		</upperPosition>
+		<lowerPosition>
+			<left>0</left>
+			<top>323.93</top>
+			<width>960</width>
+			<height>50.9</height>
+		</lowerPosition>
+	</sub>
+</config>

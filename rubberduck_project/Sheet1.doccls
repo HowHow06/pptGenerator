@@ -1,0 +1,709 @@
+﻿Option Explicit
+
+Const DEFAULT_NUMBER_OF_LINE_PER_ROW As Integer = 2
+
+Public ppt_app As New PowerPoint.Application
+Public pre As PowerPoint.Presentation
+Public slde As PowerPoint.Slide
+Public shp As PowerPoint.Shape
+Public pptLayout As CustomLayout
+Public sheet As Worksheet
+Public outputRng As Range
+Public outputPy As Range
+Public pptpathRng As Range
+Public bgpathRng As Range
+
+Public mainFontRng As Range
+Public mainColorRRng As Range
+Public mainColorGRng As Range
+Public mainColorBRng As Range
+Public mainSizeRng As Range
+Public mainBorderRRng As Range
+Public mainBorderGRng As Range
+Public mainBorderBRng As Range
+Public mainBorderWeightRng As Range
+
+Public subFontRng As Range
+Public subColorRRng As Range
+Public subColorGRng As Range
+Public subColorBRng As Range
+Public subSizeRng As Range
+Public subBorderRRng As Range
+Public subBorderGRng As Range
+Public subBorderBRng As Range
+Public subBorderWeightRng As Range
+
+Public mainLeft1Rng As Range
+Public mainTop1Rng As Range
+Public mainWidth1Rng As Range
+Public mainHeight1Rng As Range
+Public mainLeft2Rng As Range
+Public mainTop2Rng As Range
+Public mainWidth2Rng As Range
+Public mainHeight2Rng As Range
+
+Public subLeft1Rng As Range
+Public subTop1Rng As Range
+Public subWidth1Rng As Range
+Public subHeight1Rng As Range
+Public subLeft2Rng As Range
+Public subTop2Rng As Range
+Public subWidth2Rng As Range
+Public subHeight2Rng As Range
+
+
+Public mainFont As String
+Public mainColorR As Integer
+Public mainColorG As Integer
+Public mainColorB As Integer
+Public mainSize As Double
+Public mainBold As Boolean
+Public mainBorder As Boolean
+Public mainBorderR As Integer
+Public mainBorderG As Integer
+Public mainBorderB As Integer
+Public mainBorderWeight As Double
+
+Public subFont As String
+Public subColorR As Integer
+Public subColorG As Integer
+Public subColorB As Integer
+Public subSize As Double
+Public subBold As Boolean
+Public subBorder As Boolean
+Public subBorderR As Integer
+Public subBorderG As Integer
+Public subBorderB As Integer
+Public subBorderWeight As Double
+
+Public mainLeft1 As Double
+Public mainTop1 As Double
+Public mainWidth1 As Double
+Public mainHeight1 As Double
+Public mainLeft2 As Double
+Public mainTop2 As Double
+Public mainWidth2 As Double
+Public mainHeight2 As Double
+
+Public subLeft1 As Double
+Public subTop1 As Double
+Public subWidth1 As Double
+Public subHeight1 As Double
+Public subLeft2 As Double
+Public subTop2 As Double
+Public subWidth2 As Double
+Public subHeight2 As Double
+
+Public mainHasShadow As Boolean
+Public mainFontSpacing As Double
+Public mainLineSpacingBefore As Double
+Public mainLineSpacingAfter As Double
+Public mainLineSpacingBetween As Double
+Public mainHasGlow As Boolean
+Public mainGlowSize As Double
+Public mainGlowTransparency As Double
+Public mainGlowColorR As Integer
+Public mainGlowColorG As Integer
+Public mainGlowColorB As Integer
+
+
+Public subHasShadow As Boolean
+Public subFontSpacing As Double
+Public subLineSpacingBefore As Double
+Public subLineSpacingAfter As Double
+Public subLineSpacingBetween As Double
+Public subHasGlow As Boolean
+Public subGlowSize As Double
+Public subGlowTransparency As Double
+Public subGlowColorR As Integer
+Public subGlowColorG As Integer
+Public subGlowColorB As Integer
+
+
+Public cn_lyric As String
+Public py_lyric As String
+Public cnLyricArray
+Public pyLyricArray
+Public length As Integer
+Public i As Integer
+Public pptPath As String
+Public fullPath As String
+Public previewPath As String
+Public bgPath As String
+Public shapeCount As Integer
+
+Public isChineseOnly As Boolean
+Public isOneTextBox As Boolean
+Public numberOfRowsInTextBox As Integer
+
+
+
+
+
+Private Sub btnChooseBackground_Click()
+    initConfigValue 'initialize the config value
+    
+    Dim fd As Office.FileDialog
+    Dim strFile As String
+    
+    Set sheet = ThisWorkbook.Sheets("Sheet1")
+    Set fd = Application.FileDialog(msoFileDialogFilePicker)
+    With fd
+     
+        .Title = "Select an image file"
+        .AllowMultiSelect = False
+        .Filters.Clear
+        .Filters.Add "Portable Network Graphics", "*.PNG"
+        .Filters.Add "JPG", "*.JPG"
+        .Filters.Add "JPEG File Interchange Format", "*.JPEG"
+        .Filters.Add "Graphics Interchange Format", "*.GIF"
+        .Filters.Add "Tag Image File Format", "*.TIFF"
+        .Filters.Add "All Pictures", "*.*"
+     
+        .InitialFileName = ThisWorkbook.path & "\background"
+     
+        If .Show = True Then
+            strFile = .SelectedItems(1)
+            bgpathRng.value = strFile
+        End If
+     
+    End With
+End Sub
+
+
+Private Sub btnChooseOutput_Click()
+    initConfigValue 'initialize the config value
+    Dim fd As Office.FileDialog
+    Dim strFile As String
+    
+    Set sheet = ThisWorkbook.Sheets("Sheet1")
+    Set fd = Application.FileDialog(msoFileDialogFilePicker)
+     
+    With fd
+     
+        .Title = "Select an image file"
+        .AllowMultiSelect = False
+        .Filters.Clear
+        .Filters.Add "PowerPoint Presentations", "*.ppt, *.pptx"
+        .Filters.Add "All File", "*.*"
+     
+        .InitialFileName = ThisWorkbook.path
+     
+        If .Show = True Then
+     
+            strFile = .SelectedItems(1)
+            pptpathRng.value = strFile
+     
+        End If
+     
+    End With
+End Sub
+
+Private Sub btnClear_Click()
+    initConfigValue 'initialize the config value
+    Set sheet = ThisWorkbook.Sheets("Sheet1")
+    For i = 1 To 100 'delete all cell values
+               sheet.Cells(outputRng(i).Row, outputRng(i).Column).value = ""
+                sheet.Cells(outputPy(i).Row, outputPy(i).Column).value = ""
+    Next i
+End Sub
+
+Public Sub generatePreview()
+    initConfigValue 'initialize the config value
+    Set pre = ppt_app.Presentations.Open(previewPath)
+    
+    Dim linesPerRow As Integer
+    If isChineseOnly And isOneTextBox Then
+        linesPerRow = numberOfRowsInTextBox
+    Else
+        linesPerRow = DEFAULT_NUMBER_OF_LINE_PER_ROW
+    End If
+
+    cn_lyric = Sheet2.OLEObjects("txtPreviewMain").Object.value
+    py_lyric = Sheet2.OLEObjects("txtPreviewSub").Object.value
+    cnLyricArray = Split(cn_lyric, vbCrLf)
+    pyLyricArray = Split(py_lyric, vbCrLf)
+    
+    pre.Slides.Add 1, ppLayoutBlank ' add at least one empty slide
+    
+    For i = 2 To pre.Slides.Count
+           pre.Slides(2).Delete 'delete all slides
+    Next i
+    
+    shapeCount = pre.Slides(1).Shapes.Count
+     For i = shapeCount To 1 Step -1
+        pre.Slides(1).Shapes(i).Delete 'delete all shapes
+    Next
+   
+    btnClear_Click ' clear all output cell
+    
+    If (Not (isChineseOnly) And GetArrLength(cnLyricArray) <> GetArrLength(pyLyricArray)) Then
+         MsgBox ("Please make sure both lyrics are of the same count of lines")
+         Exit Sub
+    ElseIf (isChineseOnly) Then
+        If isOneTextBox Then
+            For i = 1 To (linesPerRow)
+                CreateSlide i - 1, linesPerRow
+                InsertBackground i - 1, linesPerRow
+                InserOneTextBoxLyric i - 1, cnLyricArray(i - 1), numberOfRowsInTextBox
+            Next i
+        Else
+            For i = 1 To (linesPerRow)
+                CreateSlide i - 1, linesPerRow
+                InsertBackground i - 1, linesPerRow
+                InsertCNLyric i - 1, cnLyricArray(i - 1)
+            Next i
+        End If
+    Else
+            For i = 1 To (linesPerRow)
+               CreateSlide i - 1, linesPerRow
+               InsertBackground i - 1, linesPerRow
+               InsertCNLyric i - 1, cnLyricArray(i - 1)
+               InsertPYLyric i - 1, pyLyricArray(i - 1)
+            Next i
+    End If
+    
+    pre.Slides(pre.Slides.Count).Delete 'delete last redundant slide
+    ' MsgBox "PPT Generated Successfully!"
+End Sub
+
+Private Sub btnGenerate_Click()
+    initConfigValue 'initialize the config value
+    If ThisWorkbook.isFileExists(fullPath) = False Or fullPath = "" Then
+        MsgBox ("Please make sure the ppt path is correct, or click ""Select Output"" button to re-select the output ppt file ")
+        Exit Sub
+    ElseIf ThisWorkbook.isFileExists(bgPath) = False Or bgPath = "" Then
+        MsgBox ("Please make sure the background image path is correct, or click ""Select Background"" button to re-select the background image file ")
+        Exit Sub
+    End If
+    
+    Dim linesPerRow As Integer
+    If isChineseOnly And isOneTextBox Then
+        linesPerRow = numberOfRowsInTextBox
+    Else
+        linesPerRow = DEFAULT_NUMBER_OF_LINE_PER_ROW
+    End If
+
+    cn_lyric = txtcn.Text
+    py_lyric = txtpy.Text
+    cnLyricArray = Split(cn_lyric, vbCrLf)
+    pyLyricArray = Split(py_lyric, vbCrLf)
+    
+    If (Not (isChineseOnly) And GetArrLength(cnLyricArray) <> GetArrLength(pyLyricArray)) Then
+         MsgBox ("Please make sure both lyrics are of the same count of lines")
+         Exit Sub
+    End If
+    
+    Set pre = ppt_app.Presentations.Open(fullPath)
+    pre.Slides.Add 1, ppLayoutBlank ' add at least one empty slide
+    
+    For i = 2 To pre.Slides.Count
+           pre.Slides(2).Delete 'delete all slides
+    Next i
+    
+    shapeCount = pre.Slides(1).Shapes.Count
+     For i = shapeCount To 1 Step -1
+        pre.Slides(1).Shapes(i).Delete 'delete all shapes
+    Next
+   
+    btnClear_Click ' clear all output cell
+    
+    If (Not (isChineseOnly) And GetArrLength(cnLyricArray) <> GetArrLength(pyLyricArray)) Then
+         MsgBox ("Please make sure both lyrics are of the same count of lines")
+         'theoritically this line will never be executed, because exited
+         Exit Sub
+    ElseIf (isChineseOnly) Then
+        If isOneTextBox Then
+            For i = 1 To (GetArrLength(cnLyricArray))
+                sheet.Cells(outputRng(i).Row, outputRng(i).Column).value = cnLyricArray(i - 1)
+                CreateSlide i - 1, linesPerRow
+                InsertBackground i - 1, linesPerRow
+                InserOneTextBoxLyric i - 1, cnLyricArray(i - 1), numberOfRowsInTextBox
+            Next i
+        Else
+            For i = 1 To (GetArrLength(cnLyricArray))
+                sheet.Cells(outputRng(i).Row, outputRng(i).Column).value = cnLyricArray(i - 1)
+                CreateSlide i - 1, linesPerRow
+                InsertBackground i - 1, linesPerRow
+                InsertCNLyric i - 1, cnLyricArray(i - 1)
+            Next i
+        End If
+    Else
+        For i = 1 To (GetArrLength(cnLyricArray))
+               sheet.Cells(outputRng(i).Row, outputRng(i).Column).value = cnLyricArray(i - 1)
+               sheet.Cells(outputPy(i).Row, outputPy(i).Column).value = pyLyricArray(i - 1)
+               CreateSlide i - 1, linesPerRow
+               InsertBackground i - 1, linesPerRow
+               InsertCNLyric i - 1, cnLyricArray(i - 1)
+               InsertPYLyric i - 1, pyLyricArray(i - 1)
+           Next i
+    End If
+    
+    pre.Slides(pre.Slides.Count).Delete 'delete last redundant slide
+    ' MsgBox "PPT Generated Successfully!"
+End Sub
+
+Private Sub CreateSlide(lineindex As Integer, numberOfRow As Integer)
+    Dim index As Integer
+    Dim remainder As Integer
+    remainder = lineindex Mod numberOfRow
+    If remainder = 0 Then
+        index = lineindex \ numberOfRow
+        index = index + 1
+        Set slde = pre.Slides(index)
+        Set pptLayout = slde.CustomLayout
+        pre.Slides.AddSlide index + 1, pptLayout 'add new slides
+    End If
+End Sub
+
+Private Sub InsertBackground(lineindex As Integer, numberOfRow As Integer)
+    Dim remainder As Integer
+    remainder = lineindex Mod numberOfRow
+    If remainder = 0 Then
+        Dim index As Integer
+        index = lineindex \ numberOfRow
+        index = index + 1
+        Dim strFileExists As String
+        'to check if the background png is valid
+        On Error Resume Next
+            Set shp = pre.Slides(index).Shapes.AddPicture(Filename:=bgPath, LinkToFile:=msoFalse, SaveWithDocument:=msoTrue, Left:=0, Top:=0, Width:=960, Height:=540)
+    End If
+End Sub
+
+Private Sub InsertPYLyric(lineindex As Integer, linePY As Variant)
+    Dim index As Integer
+    Dim remainder As Integer
+    remainder = lineindex Mod 2
+    index = lineindex \ 2
+    index = index + 1
+    Set slde = pre.Slides(index)
+    If remainder = 0 Then 'add first line
+        Set shp = slde.Shapes.AddTextbox(Orientation:=msoTextOrientationHorizontal, _
+        Left:=subLeft1, Top:=subTop1, Width:=subWidth1, Height:=subHeight1)
+    ElseIf remainder = 1 Then 'add second line
+        Set shp = slde.Shapes.AddTextbox(Orientation:=msoTextOrientationHorizontal, _
+            Left:=subLeft2, Top:=subTop2, Width:=subWidth2, Height:=subHeight2)
+    End If
+    With shp.TextFrame2.TextRange
+            With .ParagraphFormat
+                .Alignment = ppAlignCenter
+                .SpaceBefore = subLineSpacingBefore
+                .SpaceAfter = subLineSpacingAfter
+                .SpaceWithin = subLineSpacingBetween
+            End With
+            .Text = linePY
+            With .Font
+                .Fill.ForeColor.RGB = RGB(subColorR, subColorG, subColorB)
+                .Name = subFont
+                .Bold = subBold
+                .Size = subSize
+                 .Spacing = subFontSpacing
+                
+                With .Glow 'configure glow
+                    If subHasGlow Then
+                        .Radius = subGlowSize
+                        .Transparency = subGlowTransparency
+                        .color = RGB(subGlowColorR, subGlowColorG, subGlowColorB)
+                    End If
+                End With
+                
+                With .Shadow 'configure shadow
+                    If subHasShadow Then
+                        .Visible = True
+                        '      .OffsetX = 10
+                        '      .OffsetY = 10
+                        '      .Size = 1
+                        .Transparency = 0.55
+                        .Blur = 2
+                    End If
+                End With
+                With .line
+                    Dim visi As Integer
+                    If subBorder = True Then
+                        visi = -1
+                        .Visible = visi
+                        .Weight = subBorderWeight
+                        .ForeColor.RGB = RGB(subBorderR, subBorderG, subBorderB)
+                    End If
+                End With
+            End With
+    End With
+End Sub
+
+Private Sub InsertCNLyric(lineindex As Integer, lineCn As Variant)
+    Dim index As Integer
+    Dim remainder As Integer
+    remainder = lineindex Mod 2
+    index = lineindex \ 2
+    index = index + 1
+    Set slde = pre.Slides(index)
+    If remainder = 0 Then 'add first line
+        Set shp = slde.Shapes.AddTextbox(Orientation:=msoTextOrientationHorizontal, _
+        Left:=mainLeft1, Top:=mainTop1, Width:=mainWidth1, Height:=mainHeight1)
+    ElseIf remainder = 1 Then 'add second line
+        Set shp = slde.Shapes.AddTextbox(Orientation:=msoTextOrientationHorizontal, _
+            Left:=mainLeft2, Top:=mainTop2, Width:=mainWidth2, Height:=mainHeight2)
+    End If
+    With shp.TextFrame2.TextRange
+            With .ParagraphFormat
+                .Alignment = ppAlignCenter
+                .SpaceBefore = mainLineSpacingBefore
+                .SpaceAfter = mainLineSpacingAfter
+                .SpaceWithin = mainLineSpacingBetween
+            End With
+            .Text = lineCn
+            With .Font
+                .Fill.ForeColor.RGB = RGB(mainColorR, mainColorG, mainColorB)
+                .NameFarEast = mainFont
+                .Bold = mainBold
+                .Size = mainSize
+                .Spacing = mainFontSpacing
+                
+                With .Glow 'configure glow
+                    If mainHasGlow Then
+                        .Radius = mainGlowSize
+                        .Transparency = mainGlowTransparency
+                        .color = RGB(mainGlowColorR, mainGlowColorG, mainGlowColorB)
+                    End If
+                End With
+                
+                With .Shadow 'configure shadow
+                    If mainHasShadow Then
+                        .Visible = True
+                        '      .OffsetX = 10
+                        '      .OffsetY = 10
+                        '      .Size = 1
+                        .Transparency = 0.55
+                        .Blur = 2
+                    End If
+                End With
+                
+                With .line
+                    Dim visi As Integer
+                    If mainBorder = True Then
+                        visi = -1
+                        .Visible = visi
+                        .Weight = mainBorderWeight
+                        .ForeColor.RGB = RGB(mainBorderR, mainBorderG, mainBorderB)
+                    End If
+                End With
+            End With
+    End With
+End Sub
+
+Private Sub InserOneTextBoxLyric(lineindex As Integer, lyricLine As Variant, numberOfRow As Integer)
+    Dim index As Integer
+    Dim remainder As Integer
+    remainder = lineindex Mod numberOfRow
+    index = lineindex \ numberOfRow
+    index = index + 1
+    Set slde = pre.Slides(index)
+    
+    If remainder = 0 Then 'only create new textbox when it is first line
+        Set shp = slde.Shapes.AddTextbox(Orientation:=msoTextOrientationHorizontal, _
+        Left:=mainLeft1, Top:=mainTop1, Width:=mainWidth1, Height:=mainHeight1)
+    Else ' else select the second item, which is the existing textbox
+         Set shp = slde.Shapes.Item(2)
+    End If
+    
+    With shp.TextFrame2.TextRange
+        .InsertAfter lyricLine & vbNewLine ' insert lyric
+    End With
+    
+     With shp.TextFrame2.TextRange
+            With .ParagraphFormat
+                .Alignment = ppAlignCenter
+                .SpaceBefore = mainLineSpacingBefore
+                .SpaceAfter = mainLineSpacingAfter
+                .SpaceWithin = mainLineSpacingBetween
+            End With
+            With .Font
+                .Fill.ForeColor.RGB = RGB(mainColorR, mainColorG, mainColorB)
+                .NameFarEast = mainFont
+                .Bold = mainBold
+                .Size = mainSize
+                .Spacing = mainFontSpacing
+                
+                With .Glow 'configure glow
+                    If mainHasGlow Then
+                        .Radius = mainGlowSize
+                        .Transparency = mainGlowTransparency
+                        .color = RGB(mainGlowColorR, mainGlowColorG, mainGlowColorB)
+                    End If
+                End With
+                
+                With .Shadow 'configure shadow
+                    If mainHasShadow Then
+                        .Visible = True
+                        '      .OffsetX = 10
+                        '      .OffsetY = 10
+                        '      .Size = 1
+                        .Transparency = 0.55
+                        .Blur = 2
+                    End If
+                End With
+                
+                With .line
+                    Dim visi As Integer
+                    If mainBorder = True Then
+                        visi = -1
+                        .Visible = visi
+                        .Weight = mainBorderWeight
+                        .ForeColor.RGB = RGB(mainBorderR, mainBorderG, mainBorderB)
+                    End If
+                End With
+            End With
+    End With
+    
+End Sub
+
+Public Function GetArrLength(a As Variant) As Long
+   If IsEmpty(a) Then
+      GetArrLength = 0
+   Else
+      GetArrLength = UBound(a) - LBound(a) + 1
+   End If
+End Function
+
+
+Public Static Sub initConfigValue()
+Set sheet = ThisWorkbook.Sheets("Settings")
+Set mainFontRng = sheet.Range("mainFont")
+Set mainColorRRng = sheet.Range("mainColorR")
+Set mainColorGRng = sheet.Range("mainColorG")
+Set mainColorBRng = sheet.Range("mainColorB")
+Set mainSizeRng = sheet.Range("mainSize")
+Set mainBorderRRng = sheet.Range("mainBorderR")
+Set mainBorderGRng = sheet.Range("mainBorderG")
+Set mainBorderBRng = sheet.Range("mainBorderB")
+Set mainBorderWeightRng = sheet.Range("mainBorderWeight")
+
+Set subFontRng = sheet.Range("subFont")
+Set subColorRRng = sheet.Range("subColorR")
+Set subColorGRng = sheet.Range("subColorG")
+Set subColorBRng = sheet.Range("subColorB")
+Set subSizeRng = sheet.Range("subSize")
+Set subBorderRRng = sheet.Range("subBorderR")
+Set subBorderGRng = sheet.Range("subBorderG")
+Set subBorderBRng = sheet.Range("subBorderB")
+Set subBorderWeightRng = sheet.Range("subBorderWeight")
+
+Set mainLeft1Rng = sheet.Range("mainLeft")
+Set mainTop1Rng = sheet.Range("mainTop")
+Set mainWidth1Rng = sheet.Range("mainWidth")
+Set mainHeight1Rng = sheet.Range("mainHeight")
+Set mainLeft2Rng = sheet.Range("mainLeft2")
+Set mainTop2Rng = sheet.Range("mainTop2")
+Set mainWidth2Rng = sheet.Range("mainWidth2")
+Set mainHeight2Rng = sheet.Range("mainHeight2")
+
+Set subLeft1Rng = sheet.Range("subLeft")
+Set subTop1Rng = sheet.Range("subTop")
+Set subWidth1Rng = sheet.Range("subWidth")
+Set subHeight1Rng = sheet.Range("subHeight")
+Set subLeft2Rng = sheet.Range("subLeft2")
+Set subTop2Rng = sheet.Range("subTop2")
+Set subWidth2Rng = sheet.Range("subWidth2")
+Set subHeight2Rng = sheet.Range("subHeight2")
+
+mainFont = mainFontRng.value
+mainColorR = mainColorRRng.value
+mainColorG = mainColorGRng.value
+mainColorB = mainColorBRng.value
+mainSize = mainSizeRng.value
+mainBold = Sheet2.getMainBold
+mainBorder = Sheet2.getMainBord
+
+mainBorderR = mainBorderRRng.value
+mainBorderG = mainBorderGRng.value
+mainBorderB = mainBorderBRng.value
+mainBorderWeight = mainBorderWeightRng.value
+
+subFont = subFontRng.value
+subColorR = subColorRRng.value
+subColorG = subColorGRng.value
+subColorB = subColorBRng.value
+subSize = subSizeRng.value
+subBold = Sheet2.getSubBold
+subBorder = Sheet2.getSubBord
+subBorderR = subBorderRRng.value
+subBorderG = subBorderGRng.value
+subBorderB = subBorderBRng.value
+subBorderWeight = subBorderWeightRng.value
+
+mainLeft1 = mainLeft1Rng.value
+mainTop1 = mainTop1Rng.value
+mainWidth1 = mainWidth1Rng.value
+mainHeight1 = mainHeight1Rng.value
+mainLeft2 = mainLeft2Rng.value
+mainTop2 = mainTop2Rng.value
+mainWidth2 = mainWidth2Rng.value
+mainHeight2 = mainHeight2Rng.value
+
+subLeft1 = subLeft1Rng.value
+subTop1 = subTop1Rng.value
+subWidth1 = subWidth1Rng.value
+subHeight1 = subHeight1Rng.value
+subLeft2 = subLeft2Rng.value
+subTop2 = subTop2Rng.value
+subWidth2 = subWidth2Rng.value
+subHeight2 = subHeight2Rng.value
+
+isChineseOnly = ckbIsChineseOnly.value
+isOneTextBox = ckbIsOneField.value
+numberOfRowsInTextBox = txtNumberOfRow.value
+
+
+Set sheet = ThisWorkbook.Sheets("Sheet1")
+Set outputRng = sheet.Range("outputLyric")
+Set outputPy = sheet.Range("outputPinYin")
+Set pptpathRng = sheet.Range("pptPath")
+Set bgpathRng = sheet.Range("bgPath")
+
+pptPath = ThisWorkbook.ifRelativeConvertToAbsolutePath(pptpathRng.value)
+fullPath = ThisWorkbook.ifRelativeConvertToAbsolutePath(pptpathRng.value)
+bgPath = ThisWorkbook.ifRelativeConvertToAbsolutePath(bgpathRng.value)
+previewPath = ThisWorkbook.ifRelativeConvertToAbsolutePath("preview\preview.pptx")
+
+mainHasShadow = CBool(Sheet2.OLEObjects("ckbMainHasShadow").Object.value)
+mainFontSpacing = Sheet2.OLEObjects("txtMainFontSpacing").Object.value
+mainLineSpacingBefore = Sheet2.OLEObjects("txtMainLineSpacingBefore").Object.value
+mainLineSpacingAfter = Sheet2.OLEObjects("txtMainLineSpacingAfter").Object.value
+mainLineSpacingBetween = Sheet2.OLEObjects("txtMainLineSpacingBetween").Object.value
+mainHasGlow = CBool(Sheet2.OLEObjects("ckbMainHasGlow").Object.value)
+mainGlowSize = Sheet2.OLEObjects("txtMainGlowSize").Object.value
+mainGlowTransparency = Sheet2.OLEObjects("txtMainGlowTransparency").Object.value
+mainGlowColorR = Sheet2.OLEObjects("txtMainGlowColorR").Object.value
+mainGlowColorG = Sheet2.OLEObjects("txtMainGlowColorG").Object.value
+mainGlowColorB = Sheet2.OLEObjects("txtMainGlowColorB").Object.value
+
+subHasShadow = CBool(Sheet2.OLEObjects("ckbSubHasShadow").Object.value)
+subFontSpacing = Sheet2.OLEObjects("txtSubFontSpacing").Object.value
+subLineSpacingBefore = Sheet2.OLEObjects("txtSubLineSpacingBefore").Object.value
+subLineSpacingAfter = Sheet2.OLEObjects("txtSubLineSpacingAfter").Object.value
+subLineSpacingBetween = Sheet2.OLEObjects("txtSubLineSpacingBetween").Object.value
+subHasGlow = CBool(Sheet2.OLEObjects("ckbSubHasGlow").Object.value)
+subGlowSize = Sheet2.OLEObjects("txtSubGlowSize").Object.value
+subGlowTransparency = Sheet2.OLEObjects("txtSubGlowTransparency").Object.value
+subGlowColorR = Sheet2.OLEObjects("txtSubGlowColorR").Object.value
+subGlowColorG = Sheet2.OLEObjects("txtSubGlowColorG").Object.value
+subGlowColorB = Sheet2.OLEObjects("txtSubGlowColorB").Object.value
+
+End Sub
+
+Private Sub ckbIsChineseOnly_Change()
+    If ckbIsChineseOnly.value = False Then
+        ckbIsOneField.Enabled = ckbIsChineseOnly.value
+        lblNumberOfRow.Enabled = ckbIsChineseOnly.value
+        txtNumberOfRow.Enabled = ckbIsChineseOnly.value
+        Exit Sub
+    End If
+        
+    ckbIsOneField.Enabled = ckbIsChineseOnly.value
+    ckbIsOneField_Change
+End Sub
+
+Private Sub ckbIsOneField_Change()
+    lblNumberOfRow.Enabled = ckbIsOneField.value
+    txtNumberOfRow.Enabled = ckbIsOneField.value
+End Sub

@@ -1,0 +1,646 @@
+﻿
+Static Function getMainHasShadow() As Boolean
+    getMainHasShadow = ckbMainBold.value
+End Function
+
+Static Function getMainBold() As Boolean
+    getMainBold = ckbMainBold.value
+End Function
+
+Static Function getMainBord() As Boolean
+    getMainBord = ckbMainBorder.value
+End Function
+
+Static Function getSubBold() As Boolean
+    getSubBold = ckbSubBold.value
+End Function
+
+Static Function getSubBord() As Boolean
+    getSubBord = ckbSubBorder.value
+End Function
+
+Static Function getColorR(color As Variant) As Integer
+  getColorR = color Mod 256
+End Function
+
+Static Function getColorG(color As Variant) As Integer
+  getColorG = color \ 256 Mod 256
+End Function
+
+Static Function getColorB(color As Variant) As Integer
+  getColorB = color \ 65536 Mod 256
+End Function
+
+' setter
+Static Sub setMainBold(value As Variant)
+    ckbMainBold.value = value
+End Sub
+
+Static Sub setMainBord(value As Variant)
+    ckbMainBorder.value = value
+End Sub
+
+Static Sub setSubBold(value As Variant)
+   ckbSubBold.value = value
+End Sub
+
+Static Sub setSubBord(value As Variant)
+    ckbSubBorder.value = value
+End Sub
+
+Private Sub btnLoadPreset1_Click()
+    loadPreset 1
+End Sub
+
+Private Sub btnLoadPreset2_Click()
+    loadPreset 2
+End Sub
+
+Private Sub btnLoadPreset3_Click()
+    loadPreset 3
+End Sub
+
+Private Sub btnLoadPreset4_Click()
+    loadPreset 4
+End Sub
+
+Private Sub btnLoadPreset5_Click()
+    loadPreset 5
+End Sub
+
+Private Sub btnLoadPreset6_Click()
+    loadPreset 6
+End Sub
+
+Private Sub btnMainBorderColorPicker_Click()
+    Dim rgbSet As Variant: rgbSet = Application.Dialogs(xlDialogEditColor).Show(1)
+    If rgbSet Then
+        Sheet1.initConfigValue
+        Sheet1.mainBorderRRng.value = getColorR(ThisWorkbook.Colors(1))
+        Sheet1.mainBorderGRng.value = getColorG(ThisWorkbook.Colors(1))
+        Sheet1.mainBorderBRng.value = getColorB(ThisWorkbook.Colors(1))
+    End If
+End Sub
+
+Private Sub btnMainColorPicker_Click()
+    Dim rgbSet As Variant: rgbSet = Application.Dialogs(xlDialogEditColor).Show(1)
+    If rgbSet Then
+        Sheet1.initConfigValue
+        Sheet1.mainColorRRng.value = getColorR(ThisWorkbook.Colors(1))
+        Sheet1.mainColorGRng.value = getColorG(ThisWorkbook.Colors(1))
+        Sheet1.mainColorBRng.value = getColorB(ThisWorkbook.Colors(1))
+    End If
+End Sub
+
+Private Sub btnMainGlowColorPicker_Click()
+    Dim rgbSet As Variant: rgbSet = Application.Dialogs(xlDialogEditColor).Show(1)
+    If rgbSet Then
+        Sheet1.initConfigValue
+        txtMainGlowColorR.value = getColorR(ThisWorkbook.Colors(1))
+        txtMainGlowColorG.value = getColorG(ThisWorkbook.Colors(1))
+        txtMainGlowColorB.value = getColorB(ThisWorkbook.Colors(1))
+    End If
+End Sub
+
+Private Sub btnPreview_Click()
+    Sheet1.generatePreview
+End Sub
+
+Private Sub btnSavePreset1_Click()
+    savePreset 1
+End Sub
+
+Private Sub btnSavePreset2_Click()
+    savePreset 2
+End Sub
+
+Private Sub btnSavePreset3_Click()
+    savePreset 3
+End Sub
+
+Private Sub btnSavePreset4_Click()
+    savePreset 4
+End Sub
+
+Private Sub btnSavePreset5_Click()
+    savePreset 5
+End Sub
+
+Private Sub btnSavePreset6_Click()
+    savePreset 6
+End Sub
+
+Private Sub btnSubBorderColorPicker_Click()
+    Dim rgbSet As Variant: rgbSet = Application.Dialogs(xlDialogEditColor).Show(1)
+    If rgbSet Then
+        Sheet1.initConfigValue
+        Sheet1.subBorderRRng.value = getColorR(ThisWorkbook.Colors(1))
+        Sheet1.subBorderGRng.value = getColorG(ThisWorkbook.Colors(1))
+        Sheet1.subBorderBRng.value = getColorB(ThisWorkbook.Colors(1))
+    End If
+End Sub
+
+Private Sub btnSubColorPicker_Click()
+    Dim rgbSet As Variant: rgbSet = Application.Dialogs(xlDialogEditColor).Show(1)
+    If rgbSet Then
+        Sheet1.initConfigValue
+        Sheet1.subColorRRng.value = getColorR(ThisWorkbook.Colors(1))
+        Sheet1.subColorGRng.value = getColorG(ThisWorkbook.Colors(1))
+        Sheet1.subColorBRng.value = getColorB(ThisWorkbook.Colors(1))
+    End If
+End Sub
+
+
+Private Sub loadPreset(presetNo As Integer)
+    Dim filePath As String
+    filePath = ActiveWorkbook.path & "\config\preset_" & presetNo & ".xml"
+    
+    If Not ThisWorkbook.isFileExists(filePath) Then
+        MsgBox "Preset " & presetNo & " is empty!"
+        Exit Sub
+    End If
+    
+'On Error GoTo ErrHandle
+    Sheet1.initConfigValue
+    Dim XDoc As Object
+    
+    Set XDoc = CreateObject("MSXML2.DOMDocument.6.0")
+    XDoc.async = False: XDoc.validateOnParse = False
+    XDoc.Load (filePath)
+    Set generalNode = XDoc.SelectSingleNode("//config/general")
+    Set mainNode = XDoc.SelectSingleNode("//config/main")
+    Set subNode = XDoc.SelectSingleNode("//config/sub")
+    
+    'set general
+    Sheet1.Range("pptPath").value = generalNode.SelectSingleNode("pptPath").Text
+    Sheet1.Range("bgPath").value = generalNode.SelectSingleNode("backgroundImagePath").Text
+    Set chineseLyricOnlyNode = generalNode.SelectSingleNode("chineseLyricOnly")
+    Sheet1.OLEObjects("ckbIsChineseOnly").Object.value = CBool(chineseLyricOnlyNode.Attributes(0).Text)
+    Sheet1.OLEObjects("ckbIsOneField").Object.value = CBool(chineseLyricOnlyNode.SelectSingleNode("oneTextField").Attributes(0).Text)
+    Sheet1.OLEObjects("txtNumberOfRow").Object.value = chineseLyricOnlyNode.SelectSingleNode("oneTextField/numberOfRow").Text
+    
+    
+    ' set main
+    Set fontNode = mainNode.SelectSingleNode("font")
+    Sheet1.mainFontRng.value = fontNode.SelectSingleNode("fontName").Text
+    Sheet1.mainColorRRng.value = fontNode.SelectSingleNode("fontColorR").Text
+    Sheet1.mainColorGRng.value = fontNode.SelectSingleNode("fontColorG").Text
+    Sheet1.mainColorBRng.value = fontNode.SelectSingleNode("fontColorB").Text
+    Sheet1.mainSizeRng.value = fontNode.SelectSingleNode("fontSize").Text
+    setMainBold CBool(fontNode.SelectSingleNode("fontBold").Text)
+    'main border
+    Set fontBorderNode = fontNode.SelectSingleNode("fontBorder")
+    setMainBord CBool(fontBorderNode.Attributes(0).Text)
+    Sheet1.mainBorderRRng.value = fontBorderNode.SelectSingleNode("colorR").Text
+    Sheet1.mainBorderGRng.value = fontBorderNode.SelectSingleNode("colorG").Text
+    Sheet1.mainBorderBRng.value = fontBorderNode.SelectSingleNode("colorB").Text
+    Sheet1.mainBorderWeightRng.value = fontBorderNode.SelectSingleNode("weight").Text
+    'main shadow
+    ckbMainHasShadow.value = CBool(mainNode.SelectSingleNode("shadow").Attributes(0).Text)
+    
+    'main spacing
+    txtMainFontSpacing.value = mainNode.SelectSingleNode("fontSpacing").Text
+    txtMainLineSpacingBefore = mainNode.SelectSingleNode("lineSpacingBefore").Text
+    txtMainLineSpacingAfter = mainNode.SelectSingleNode("lineSpacingAfter").Text
+    txtMainLineSpacingBetween = mainNode.SelectSingleNode("lineSpacingBetween").Text
+    
+    'main glow
+    Set glowNode = mainNode.SelectSingleNode("glow")
+    ckbMainHasGlow.value = CBool(glowNode.Attributes(0).Text)
+    txtMainGlowSize = glowNode.SelectSingleNode("size").Text
+    txtMainGlowTransparency = glowNode.SelectSingleNode("transparency").Text
+    txtMainGlowColorR = glowNode.SelectSingleNode("colorR").Text
+    txtMainGlowColorG = glowNode.SelectSingleNode("colorG").Text
+    txtMainGlowColorB = glowNode.SelectSingleNode("colorB").Text
+    
+    'main upper position
+    Set positionNode = mainNode.SelectSingleNode("upperPosition")
+    Sheet1.mainLeft1Rng.value = positionNode.SelectSingleNode("left").Text
+    Sheet1.mainTop1Rng.value = positionNode.SelectSingleNode("top").Text
+    Sheet1.mainWidth1Rng.value = positionNode.SelectSingleNode("width").Text
+    Sheet1.mainHeight1Rng.value = positionNode.SelectSingleNode("height").Text
+    
+    'main lower position
+    Set positionNode = mainNode.SelectSingleNode("lowerPosition")
+    Sheet1.mainLeft2Rng.value = positionNode.SelectSingleNode("left").Text
+    Sheet1.mainTop2Rng.value = positionNode.SelectSingleNode("top").Text
+    Sheet1.mainWidth2Rng.value = positionNode.SelectSingleNode("width").Text
+    Sheet1.mainHeight2Rng.value = positionNode.SelectSingleNode("height").Text
+    
+    ' set sub--------------------------------------------------------------------------------------
+    Set fontNode = subNode.SelectSingleNode("font")
+    Sheet1.subFontRng.value = fontNode.SelectSingleNode("fontName").Text
+    Sheet1.subColorRRng.value = fontNode.SelectSingleNode("fontColorR").Text
+    Sheet1.subColorGRng.value = fontNode.SelectSingleNode("fontColorG").Text
+    Sheet1.subColorBRng.value = fontNode.SelectSingleNode("fontColorB").Text
+    Sheet1.subSizeRng.value = fontNode.SelectSingleNode("fontSize").Text
+    setSubBold CBool(fontNode.SelectSingleNode("fontBold").Text)
+    'sub border
+    Set fontBorderNode = fontNode.SelectSingleNode("fontBorder")
+    setSubBord CBool(fontBorderNode.Attributes(0).Text)
+    Sheet1.subBorderRRng.value = fontBorderNode.SelectSingleNode("colorR").Text
+    Sheet1.subBorderGRng.value = fontBorderNode.SelectSingleNode("colorG").Text
+    Sheet1.subBorderBRng.value = fontBorderNode.SelectSingleNode("colorB").Text
+    Sheet1.subBorderWeightRng.value = fontBorderNode.SelectSingleNode("weight").Text
+    
+    'sub shadow
+    ckbSubHasShadow.value = CBool(subNode.SelectSingleNode("shadow").Attributes(0).Text)
+    
+    'sub spacing
+    txtSubFontSpacing.value = subNode.SelectSingleNode("fontSpacing").Text
+    txtSubLineSpacingBefore = subNode.SelectSingleNode("lineSpacingBefore").Text
+    txtSubLineSpacingAfter = subNode.SelectSingleNode("lineSpacingAfter").Text
+    txtSubLineSpacingBetween = subNode.SelectSingleNode("lineSpacingBetween").Text
+    
+    'sub glow
+    Set glowNode = subNode.SelectSingleNode("glow")
+    ckbSubHasGlow.value = CBool(glowNode.Attributes(0).Text)
+    txtSubGlowSize = glowNode.SelectSingleNode("size").Text
+    txtSubGlowTransparency = glowNode.SelectSingleNode("transparency").Text
+    txtSubGlowColorR = glowNode.SelectSingleNode("colorR").Text
+    txtSubGlowColorG = glowNode.SelectSingleNode("colorG").Text
+    txtSubGlowColorB = glowNode.SelectSingleNode("colorB").Text
+    
+    'sub upper position
+    Set positionNode = subNode.SelectSingleNode("upperPosition")
+    Sheet1.subLeft1Rng.value = positionNode.SelectSingleNode("left").Text
+    Sheet1.subTop1Rng.value = positionNode.SelectSingleNode("top").Text
+    Sheet1.subWidth1Rng.value = positionNode.SelectSingleNode("width").Text
+    Sheet1.subHeight1Rng.value = positionNode.SelectSingleNode("height").Text
+    
+    'sub lower position
+    Set positionNode = subNode.SelectSingleNode("lowerPosition")
+    Sheet1.subLeft2Rng.value = positionNode.SelectSingleNode("left").Text
+    Sheet1.subTop2Rng.value = positionNode.SelectSingleNode("top").Text
+    Sheet1.subWidth2Rng.value = positionNode.SelectSingleNode("width").Text
+    Sheet1.subHeight2Rng.value = positionNode.SelectSingleNode("height").Text
+    
+    MsgBox "Loaded preset " & presetNo, vbInformation
+    Exit Sub
+ErrHandle:
+   MsgBox Err.Number & " - " & Err.Description, vbCritical
+   Exit Sub
+
+End Sub
+
+
+Private Sub savePreset(presetNo As Integer)
+
+On Error GoTo ErrHandle
+    Sheet1.initConfigValue
+    
+    Dim root As Object
+    
+    Set XDoc = CreateObject("MSXML2.DOMDocument.6.0")
+    Set xslDoc = CreateObject("MSXML2.DOMDocument.6.0")
+    Set newDoc = CreateObject("MSXML2.DOMDocument.6.0")
+    Set root = XDoc.createElement("config")
+    XDoc.appendChild root
+    
+    'General settings in Sheet 1
+    Set general = XDoc.createElement("general")
+    root.appendChild general
+    
+    Set pptPath = XDoc.createElement("pptPath")
+    pptPath.Text = Sheet1.pptPath
+    general.appendChild pptPath
+    
+    Set backgroundImagePath = XDoc.createElement("backgroundImagePath")
+    backgroundImagePath.Text = Sheet1.bgPath
+    general.appendChild backgroundImagePath
+    
+    Set chineseLyricOnly = XDoc.createElement("chineseLyricOnly")
+    general.appendChild chineseLyricOnly
+        
+    Set rel = XDoc.createAttribute("enabled")
+    rel.NodeValue = Sheet1.isChineseOnly
+    chineseLyricOnly.setAttributeNode rel
+    
+    Set oneTextField = XDoc.createElement("oneTextField")
+    chineseLyricOnly.appendChild oneTextField
+    
+    Set rel = XDoc.createAttribute("enabled")
+    rel.NodeValue = Sheet1.isOneTextBox
+    oneTextField.setAttributeNode rel
+    
+     Set numberOfRow = XDoc.createElement("numberOfRow")
+    numberOfRow.Text = Sheet1.numberOfRowsInTextBox
+    oneTextField.appendChild numberOfRow
+         
+    'Add main to root
+    Set main = XDoc.createElement("main")
+    root.appendChild main
+    
+    ' Main font
+    Set Font = XDoc.createElement("font")
+    main.appendChild Font
+    
+    Set FontName = XDoc.createElement("fontName")
+    FontName.Text = Sheet1.mainFont
+    Font.appendChild FontName
+    
+    Set FontColorR = XDoc.createElement("fontColorR")
+    FontColorR.Text = Sheet1.mainColorR
+    Font.appendChild FontColorR
+    Set FontColorG = XDoc.createElement("fontColorG")
+    FontColorG.Text = Sheet1.mainColorG
+    Font.appendChild FontColorG
+    Set FontColorB = XDoc.createElement("fontColorB")
+    FontColorB.Text = Sheet1.mainColorB
+    Font.appendChild FontColorB
+    
+    Set FontSize = XDoc.createElement("fontSize")
+    FontSize.Text = Sheet1.mainSize
+    Font.appendChild FontSize
+    Set FontBold = XDoc.createElement("fontBold")
+    FontBold.Text = Sheet1.mainBold
+    Font.appendChild FontBold
+    
+    ' for main font border
+    Set fontBorder = XDoc.createElement("fontBorder")
+    Font.appendChild fontBorder
+    
+    Set rel = XDoc.createAttribute("enabled")
+    rel.NodeValue = Sheet1.mainBorder
+    fontBorder.setAttributeNode rel
+    
+    Set colorR = XDoc.createElement("colorR")
+    colorR.Text = Sheet1.mainBorderR
+    fontBorder.appendChild colorR
+    Set colorG = XDoc.createElement("colorG")
+    colorG.Text = Sheet1.mainBorderG
+    fontBorder.appendChild colorG
+    Set colorB = XDoc.createElement("colorB")
+    colorB.Text = Sheet1.mainBorderB
+    fontBorder.appendChild colorB
+    
+    Set Weight = XDoc.createElement("weight")
+    Weight.Text = Sheet1.mainBorderWeight
+    fontBorder.appendChild Weight
+    
+    'main shadow
+    Set Shadow = XDoc.createElement("shadow")
+    main.appendChild Shadow
+    Set rel = XDoc.createAttribute("enabled")
+    rel.NodeValue = Sheet1.mainHasShadow
+    Shadow.setAttributeNode rel
+    
+    'main spacing
+    Set fontSpacing = XDoc.createElement("fontSpacing")
+    fontSpacing.Text = Sheet1.mainFontSpacing
+    main.appendChild fontSpacing
+    
+    Set lineSpacingBefore = XDoc.createElement("lineSpacingBefore")
+    lineSpacingBefore.Text = Sheet1.mainLineSpacingBefore
+    main.appendChild lineSpacingBefore
+    
+     Set lineSpacingAfter = XDoc.createElement("lineSpacingAfter")
+    lineSpacingAfter.Text = Sheet1.mainLineSpacingAfter
+    main.appendChild lineSpacingAfter
+    
+     Set lineSpacingBetween = XDoc.createElement("lineSpacingBetween")
+    lineSpacingBetween.Text = Sheet1.mainLineSpacingBetween
+    main.appendChild lineSpacingBetween
+    
+    'main glow
+    Set Glow = XDoc.createElement("glow")
+    main.appendChild Glow
+    Set rel = XDoc.createAttribute("enabled")
+    rel.NodeValue = Sheet1.mainHasGlow
+    Glow.setAttributeNode rel
+    
+    Set Size = XDoc.createElement("size")
+    Size.Text = Sheet1.mainGlowSize
+    Glow.appendChild Size
+    Set Transparency = XDoc.createElement("transparency")
+    Transparency.Text = Sheet1.mainGlowTransparency
+    Glow.appendChild Transparency
+    Set colorR = XDoc.createElement("colorR")
+    colorR.Text = Sheet1.mainGlowColorR
+    Glow.appendChild colorR
+    Set colorG = XDoc.createElement("colorG")
+    colorG.Text = Sheet1.mainGlowColorG
+    Glow.appendChild colorG
+    Set colorB = XDoc.createElement("colorB")
+    colorB.Text = Sheet1.mainGlowColorB
+    Glow.appendChild colorB
+        
+    ' main upper position
+    Set upperPosition = XDoc.createElement("upperPosition")
+    main.appendChild upperPosition
+    
+    Set PositionLeft = XDoc.createElement("left")
+    PositionLeft.Text = Sheet1.mainLeft1
+    upperPosition.appendChild PositionLeft
+    
+    Set PositionTop = XDoc.createElement("top")
+    PositionTop.Text = Sheet1.mainTop1
+    upperPosition.appendChild PositionTop
+    
+    Set PositionWidth = XDoc.createElement("width")
+    PositionWidth.Text = Sheet1.mainWidth1
+    upperPosition.appendChild PositionWidth
+    
+    Set PositionHeight = XDoc.createElement("height")
+    PositionHeight.Text = Sheet1.mainHeight1
+    upperPosition.appendChild PositionHeight
+    
+    ' main lower position
+    Set lowerPosition = XDoc.createElement("lowerPosition")
+    main.appendChild lowerPosition
+    
+    Set PositionLeft = XDoc.createElement("left")
+    PositionLeft.Text = Sheet1.mainLeft2
+    lowerPosition.appendChild PositionLeft
+    
+    Set PositionTop = XDoc.createElement("top")
+    PositionTop.Text = Sheet1.mainTop2
+    lowerPosition.appendChild PositionTop
+    
+    Set PositionWidth = XDoc.createElement("width")
+    PositionWidth.Text = Sheet1.mainWidth2
+    lowerPosition.appendChild PositionWidth
+    
+    Set PositionHeight = XDoc.createElement("height")
+    PositionHeight.Text = Sheet1.mainHeight2
+    lowerPosition.appendChild PositionHeight
+        
+    '---below is for sub-----------------------------------------
+     
+     'Add sub to root
+    Set secondary = XDoc.createElement("sub")
+    root.appendChild secondary
+    
+    ' secondary font
+    Set Font = XDoc.createElement("font")
+    secondary.appendChild Font
+    
+    Set FontName = XDoc.createElement("fontName")
+    FontName.Text = Sheet1.subFont
+    Font.appendChild FontName
+    
+    Set FontColorR = XDoc.createElement("fontColorR")
+    FontColorR.Text = Sheet1.subColorR
+    Font.appendChild FontColorR
+    Set FontColorG = XDoc.createElement("fontColorG")
+    FontColorG.Text = Sheet1.subColorG
+    Font.appendChild FontColorG
+    Set FontColorB = XDoc.createElement("fontColorB")
+    FontColorB.Text = Sheet1.subColorB
+    Font.appendChild FontColorB
+    
+    Set FontSize = XDoc.createElement("fontSize")
+    FontSize.Text = Sheet1.subSize
+    Font.appendChild FontSize
+    Set FontBold = XDoc.createElement("fontBold")
+    FontBold.Text = Sheet1.subBold
+    Font.appendChild FontBold
+    
+    ' for secondary font border
+    Set fontBorder = XDoc.createElement("fontBorder")
+    Font.appendChild fontBorder
+    
+    Set rel = XDoc.createAttribute("enabled")
+    rel.NodeValue = Sheet1.subBorder
+    fontBorder.setAttributeNode rel
+    
+    Set colorR = XDoc.createElement("colorR")
+    colorR.Text = Sheet1.subBorderR
+    fontBorder.appendChild colorR
+    Set colorG = XDoc.createElement("colorG")
+    colorG.Text = Sheet1.subBorderG
+    fontBorder.appendChild colorG
+    Set colorB = XDoc.createElement("colorB")
+    colorB.Text = Sheet1.subBorderB
+    fontBorder.appendChild colorB
+    
+    Set Weight = XDoc.createElement("weight")
+    Weight.Text = Sheet1.subBorderWeight
+    fontBorder.appendChild Weight
+    
+    'sub shadow
+    Set Shadow = XDoc.createElement("shadow")
+    secondary.appendChild Shadow
+    Set rel = XDoc.createAttribute("enabled")
+    rel.NodeValue = Sheet1.subHasShadow
+    Shadow.setAttributeNode rel
+    
+    'sub spacing
+    Set fontSpacing = XDoc.createElement("fontSpacing")
+    fontSpacing.Text = Sheet1.subFontSpacing
+    secondary.appendChild fontSpacing
+    
+    Set lineSpacingBefore = XDoc.createElement("lineSpacingBefore")
+    lineSpacingBefore.Text = Sheet1.subLineSpacingBefore
+    secondary.appendChild lineSpacingBefore
+    
+     Set lineSpacingAfter = XDoc.createElement("lineSpacingAfter")
+    lineSpacingAfter.Text = Sheet1.subLineSpacingAfter
+    secondary.appendChild lineSpacingAfter
+    
+     Set lineSpacingBetween = XDoc.createElement("lineSpacingBetween")
+    lineSpacingBetween.Text = Sheet1.subLineSpacingBetween
+    secondary.appendChild lineSpacingBetween
+    
+    'sub glow
+    Set Glow = XDoc.createElement("glow")
+    secondary.appendChild Glow
+    Set rel = XDoc.createAttribute("enabled")
+    rel.NodeValue = Sheet1.subHasGlow
+    Glow.setAttributeNode rel
+    
+    Set Size = XDoc.createElement("size")
+    Size.Text = Sheet1.subGlowSize
+    Glow.appendChild Size
+    Set Transparency = XDoc.createElement("transparency")
+    Transparency.Text = Sheet1.subGlowTransparency
+    Glow.appendChild Transparency
+    Set colorR = XDoc.createElement("colorR")
+    colorR.Text = Sheet1.subGlowColorR
+    Glow.appendChild colorR
+    Set colorG = XDoc.createElement("colorG")
+    colorG.Text = Sheet1.subGlowColorG
+    Glow.appendChild colorG
+    Set colorB = XDoc.createElement("colorB")
+    colorB.Text = Sheet1.subGlowColorB
+    Glow.appendChild colorB
+    
+    
+    
+    ' secondary upper position
+    Set upperPosition = XDoc.createElement("upperPosition")
+    secondary.appendChild upperPosition
+    
+    Set PositionLeft = XDoc.createElement("left")
+    PositionLeft.Text = Sheet1.subLeft1
+    upperPosition.appendChild PositionLeft
+    
+    Set PositionTop = XDoc.createElement("top")
+    PositionTop.Text = Sheet1.subTop1
+    upperPosition.appendChild PositionTop
+    
+    Set PositionWidth = XDoc.createElement("width")
+    PositionWidth.Text = Sheet1.subWidth1
+    upperPosition.appendChild PositionWidth
+    
+    Set PositionHeight = XDoc.createElement("height")
+    PositionHeight.Text = Sheet1.subHeight1
+    upperPosition.appendChild PositionHeight
+    
+    ' secondary lower position
+    Set lowerPosition = XDoc.createElement("lowerPosition")
+    secondary.appendChild lowerPosition
+    
+    Set PositionLeft = XDoc.createElement("left")
+    PositionLeft.Text = Sheet1.subLeft2
+    lowerPosition.appendChild PositionLeft
+    
+    Set PositionTop = XDoc.createElement("top")
+    PositionTop.Text = Sheet1.subTop2
+    lowerPosition.appendChild PositionTop
+    
+    Set PositionWidth = XDoc.createElement("width")
+    PositionWidth.Text = Sheet1.subWidth2
+    lowerPosition.appendChild PositionWidth
+    
+    Set PositionHeight = XDoc.createElement("height")
+    PositionHeight.Text = Sheet1.subHeight2
+    lowerPosition.appendChild PositionHeight
+    
+' PRETTY PRINT RAW OUTPUT '
+    xslDoc.LoadXML "<?xml version=" & Chr(34) & "1.0" & Chr(34) & "?>" _
+            & "<xsl:stylesheet version=" & Chr(34) & "1.0" & Chr(34) _
+            & "                xmlns:xsl=" & Chr(34) & "http://www.w3.org/1999/XSL/Transform" & Chr(34) & ">" _
+            & "<xsl:strip-space elements=" & Chr(34) & "*" & Chr(34) & " />" _
+            & "<xsl:output method=" & Chr(34) & "xml" & Chr(34) & " indent=" & Chr(34) & "yes" & Chr(34) & "" _
+            & "            encoding=" & Chr(34) & "UTF-8" & Chr(34) & "/>" _
+            & " <xsl:template match=" & Chr(34) & "node() | @*" & Chr(34) & ">" _
+            & "  <xsl:copy>" _
+            & "   <xsl:apply-templates select=" & Chr(34) & "node() | @*" & Chr(34) & " />" _
+            & "  </xsl:copy>" _
+            & " </xsl:template>" _
+            & "</xsl:stylesheet>"
+
+    xslDoc.async = False
+    XDoc.transformNodeToObject xslDoc, newDoc
+    newDoc.Save ActiveWorkbook.path & "\config\preset_" & presetNo & ".xml"
+
+    MsgBox "Successfully saved config for preset " & presetNo, vbInformation
+    Exit Sub
+    
+ErrHandle:
+    MsgBox Err.Number & " - " & Err.Description, vbCritical
+    Exit Sub
+
+End Sub
+
+
+Private Sub btnSubGlowColorPicker_Click()
+   Dim rgbSet As Variant: rgbSet = Application.Dialogs(xlDialogEditColor).Show(1)
+    If rgbSet Then
+        Sheet1.initConfigValue
+        txtSubGlowColorR.value = getColorR(ThisWorkbook.Colors(1))
+        txtSubGlowColorG.value = getColorG(ThisWorkbook.Colors(1))
+        txtSubGlowColorB.value = getColorB(ThisWorkbook.Colors(1))
+    End If
+End Sub
