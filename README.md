@@ -15,7 +15,6 @@ PPT generator using Microsoft Excel VBA, to produce Praise and Worship PPT
   * [How to generate PPT with Chinese Lyric only? ( Generating OneText Box, Customizabe Row Count)](#how-to-generate-ppt-with-chinese-lyric-only--generating-onetext-box-customizabe-row-count)
     + [Sample Output:](#sample-output-2)
     + [Steps:](#steps-2)
-
 - [Documentation](#documentation)
   * [Chinese Lyric Only Option](#chinese-lyric-only-option)
   * [Use One Text Box Option](#use-one-text-box-option)
@@ -31,6 +30,8 @@ PPT generator using Microsoft Excel VBA, to produce Praise and Worship PPT
   * [Positioning](#positioning)
   * [Preview](#preview)
   * [Preset](#preset)
+
+
 
 # Manual
 
@@ -66,6 +67,7 @@ PPT generator using Microsoft Excel VBA, to produce Praise and Worship PPT
 7. The PPT will be generated and you may Save it as a new file.
    <img src="https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206184515110.png" alt="image-20220206184515110"  />
 
+---
 
 
 ## How to generate PPT with Chinese Lyric only? ( Generating Two Text Boxes)
@@ -85,7 +87,7 @@ Follow the Step 1-3 mentioned in the section above: How to generate PPT with Chi
 
 Follow the step 6-7 mentioned in the section above: How to generate PPT with Chinese Lyric and Pinyin(or English Lyric)?
 
-
+---
 
 ## How to generate PPT with Chinese Lyric only? ( Generating OneText Box, Customizabe Row Count)
 
@@ -104,7 +106,7 @@ Follow the Step 1-3 mentioned in the section above: How to generate PPT with Chi
 Follow the step 6-7 mentioned in the section above: How to generate PPT with Chinese Lyric and Pinyin(or English Lyric)?
 
 
-
+---
 
 
 # Documentation
@@ -115,6 +117,8 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
 - This PPT Generator was meant to generate PPT slides with Chinese Lyric and Pinyin
 - Therefore, to generate PPT slides with Chinese Lyric Only, check the "Chinese Lyric Only" checkbox
+
+---
 
 ## Use One Text Box Option
 
@@ -131,7 +135,7 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
   ![image-20220206191058234](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191058234.png)
 
-
+---
 
 ## File Paths
 
@@ -141,8 +145,6 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 - Both PPT path and background image path can be absolute or relative
 - When the message box below popped up, you might want to make sure your path is correct or click the "Select Output" or "Select Background" button to re-insert the correct file path:
   ![image-20220206174524167](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206174524167.png)
-
-
 
 ### Relative Path
 
@@ -154,12 +156,16 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 - Example of absolute path:
   ![image-20220206174154691](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206174154691.png)
 
+---
+
 ## Main and Sub
 
 - Format settings can be done toward Main section and Sub section of the slide at Sheet 2 (Settings)
 - ![image-20220206191650866](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191650866.png)
 - ![image-20220206191658168](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191658168.png)
 - ![image-20220206191547109](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191547109.png)
+
+---
 
 ## Font
 
@@ -168,11 +174,13 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
   - ![image-20220206191833715](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191833715.png)
   - ![image-20220206191917229](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191917229.png)
 
+---
+
 ## Color
 
 - you may manually type in the RGB value or click the "Pick a Color" button to pick a color
 
-
+---
 
 ## Border Weight
 
@@ -182,7 +190,7 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
   ![image-20220206192204173](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192204173.png)
 - Default value: 1.5 
 
-
+---
 
 ## Font Spacing
 
@@ -195,13 +203,15 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
   - Loose = 3
   - Very Loose = 6
 
+---
+
 ## Line Space
 
 - ![image-20220206192851657](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192851657.png)
 - The three settings are corresponding to "Spacing Before", "Spacing After", "Line Spacing Multiple At" as shown in the diagram below:
   ![image-20220206192810024](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192810024.png)
 
-
+---
 
 ## Positioning
 
@@ -216,14 +226,14 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
   - Width = 960 (full width)
 - Normally you will only need to adjust the "Top" value, the textbox will move downward when the value is larger
 
-
+---
 
 ## Preview
 
 - <img src="https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206194217841.png" alt="image-20220206194217841"  />
 - You may preview your setting by inputting the lyric and click preview button
 
-
+---
 
 ## Preset
 
