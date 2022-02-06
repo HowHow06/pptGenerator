@@ -5,6 +5,7 @@ PPT generator using Microsoft Excel VBA, to produce Praise and Worship PPT
 
 
 # Table of Contents
+
   * [How to generate PPT with Chinese Lyric and Pinyin(or English Lyric)?](#how-to-generate-ppt-with-chinese-lyric-and-pinyin-or-english-lyric)
     + [Sample output:](#sample-output)
     + [Steps:](#steps)
@@ -14,6 +15,7 @@ PPT generator using Microsoft Excel VBA, to produce Praise and Worship PPT
   * [How to generate PPT with Chinese Lyric only? ( Generating OneText Box, Customizabe Row Count)](#how-to-generate-ppt-with-chinese-lyric-only--generating-onetext-box-customizabe-row-count)
     + [Sample Output:](#sample-output-2)
     + [Steps:](#steps-2)
+
 - [Documentation](#documentation)
   * [Chinese Lyric Only Option](#chinese-lyric-only-option)
   * [Use One Text Box Option](#use-one-text-box-option)
@@ -36,7 +38,7 @@ PPT generator using Microsoft Excel VBA, to produce Praise and Worship PPT
 
 ### Sample output:
 
-![image-20220206175415130](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206174953205.png)
+![image-20220206175415130](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206175415130.png)
 
 ### Steps:
 
@@ -44,20 +46,20 @@ PPT generator using Microsoft Excel VBA, to produce Praise and Worship PPT
 
    By default, the PPT path will be "output.pptx".
 
-   ![image-20220206174953205](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206175232443.png)
+   ![image-20220206174953205](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206174953205.png)
 
 2. Configure the settings at Sheet 2 (Settings), such as font size, shadow, position etc. Please refer to documentation on the configurations.
 
-   ![image-20220206175232443](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206184059420.png)
+   ![image-20220206175232443](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206175232443.png)
 
 3. Insert the chinese lyric and pin yin into the text boxes, make sure the lyric is organised nicely line by line:
-   ![image-20220206184059420](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206184142128.png)
+   ![image-20220206184059420](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206184059420.png)
 
 4. Make sure "Chinese Lyric Only" checkbox is not checked
-   <img src="https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206184417482.png" alt="image-20220206184142128"  />
+   <img src="https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206184142128.png" alt="image-20220206184142128"  />
 
 5. Make sure the chinese lyric and pin yin have the same number of rows. For example, if there are 5 lines of chinese lyric, make sure there are also 5 lines of pin yin (including empty line)
-   ![image-20220206184417482](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206175415130.png)
+   ![image-20220206184417482](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206184417482.png)
 
 6. Click generate button.
 
@@ -79,7 +81,7 @@ Follow the Step 1-3 mentioned in the section above: How to generate PPT with Chi
 4. Check the "Chinese Lyric Only" checkbox but leave the "Use One Text Box" unchecked.
    ![image-20220206184924407](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206184924407.png)
 5. The input in Pin Yin text box will be ignored. You may leave it blank.
-   ![image-20220206185200940](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206185356802.png)
+   ![image-20220206185200940](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206185200940.png)
 
 Follow the step 6-7 mentioned in the section above: How to generate PPT with Chinese Lyric and Pinyin(or English Lyric)?
 
@@ -89,14 +91,14 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
 ### Sample Output:
 
-![image-20220206185356802](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206185953461.png)
+![image-20220206185356802](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206185356802.png)
 
 ### Steps:
 
 Follow the Step 1-3 mentioned in the section above: How to generate PPT with Chinese Lyric and Pinyin(or English Lyric)?
 
 4. Check the "Chinese Lyric Only" and "Use One Text Box" checkbox. Specify the number of line per PPT Slide. (In this example is 3 lines). 
-   ![image-20220206185632006](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206185200940.png)
+   ![image-20220206185632006](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206185632006.png)
 5. The input in Pin Yin text box will be ignored. You may leave it blank.
 
 Follow the step 6-7 mentioned in the section above: How to generate PPT with Chinese Lyric and Pinyin(or English Lyric)?
@@ -109,7 +111,7 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
 ## Chinese Lyric Only Option
 
-![image-20220206185953461](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206185632006.png)
+![image-20220206185953461](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206185953461.png)
 
 - This PPT Generator was meant to generate PPT slides with Chinese Lyric and Pinyin
 - Therefore, to generate PPT slides with Chinese Lyric Only, check the "Chinese Lyric Only" checkbox
@@ -127,7 +129,7 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
 - In the sample shown below is one text box with 3 lines of lyric
 
-  ![image-20220206191058234](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206174524167.png)
+  ![image-20220206191058234](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191058234.png)
 
 
 
@@ -138,14 +140,14 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
   - Background Image Path: The background image that will be used in output PPT
 - Both PPT path and background image path can be absolute or relative
 - When the message box below popped up, you might want to make sure your path is correct or click the "Select Output" or "Select Background" button to re-insert the correct file path:
-  ![image-20220206174524167](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206174101117.png)
+  ![image-20220206174524167](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206174524167.png)
 
 
 
 ### Relative Path
 
 - Example of relative path:
-  <img src="https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191650866.png" alt="image-20220206174101117"  />
+  <img src="https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206174101117.png" alt="image-20220206191650866"  />
 
 ### Absolute Path
 
@@ -155,16 +157,16 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 ## Main and Sub
 
 - Format settings can be done toward Main section and Sub section of the slide at Sheet 2 (Settings)
-- ![image-20220206191650866](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191058234.png)
+- ![image-20220206191650866](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-image-20220206191650866.png)
 - ![image-20220206191658168](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191658168.png)
-- ![image-20220206191547109](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191833715.png)
+- ![image-20220206191547109](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191547109.png)
 
 ## Font
 
 - The font name used must be exacty the same as the displayed font name in Microsoft Powerpoint
 - Example:
-  - ![image-20220206191833715](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191917229.png)
-  - ![image-20220206191917229](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192648897.png)
+  - ![image-20220206191833715](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191833715.png)
+  - ![image-20220206191917229](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191917229.png)
 
 ## Color
 
@@ -174,17 +176,17 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
 ## Border Weight
 
-- ![image-20220206192648897](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192204173.png)
+- ![image-20220206192648897](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192648897.png)
 - The thickness of the font outline. (Only visible when "Border" option is checked)
 - You may refer to the diagram below
-  ![image-20220206192204173](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192638328.png)
+  ![image-20220206192204173](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192204173.png)
 - Default value: 1.5 
 
 
 
 ## Font Spacing
 
-- ![image-20220206192638328](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191547109.png)
+- ![image-20220206192638328](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192638328.png)
 - The character spacing, you may adjust accordingly
   ![image-20220206192308539](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192308539.png)
   - Very tight = -3
@@ -195,7 +197,7 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
 ## Line Space
 
-- ![image-20220206192851657](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206194131228.png)
+- ![image-20220206192851657](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192851657.png)
 - The three settings are corresponding to "Spacing Before", "Spacing After", "Line Spacing Multiple At" as shown in the diagram below:
   ![image-20220206192810024](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192810024.png)
 
@@ -203,10 +205,10 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
 ## Positioning
 
-- ![image-20220206194131228](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206192851657.png)
+- ![image-20220206194131228](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206194131228.png)
 - Upper and Lower section of Main and Sub can be changed
   - ![image-20220206193207695](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206193207695.png)
-- ![image-20220206193838259](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206194217841.png)
+- ![image-20220206193838259](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206193838259.png)
 - By Default:
   - Left = 0
   - Top = 70++
@@ -218,13 +220,13 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 
 ## Preview
 
-- <img src="https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206194317599.png" alt="image-20220206194217841"  />
+- <img src="https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206194217841.png" alt="image-20220206194217841"  />
 - You may preview your setting by inputting the lyric and click preview button
 
 
 
 ## Preset
 
-- ![image-20220206194317599](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206193838259.png)
+- ![image-20220206194317599](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206194317599.png)
 - After you have completed configuring, you may save the setting to preset (preset 1-6), so that it can be easily loaded 
 - You may label the preset in the text box given
