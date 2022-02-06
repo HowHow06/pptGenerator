@@ -5,8 +5,30 @@ PPT generator using Microsoft Excel VBA, to produce Praise and Worship PPT
 
 
 # Table of Contents
-
--  
+* [How to generate PPT with Chinese Lyric and Pinyin(or English Lyric)?](#how-to-generate-ppt-with-chinese-lyric-and-pinyin-or-english-lyric)
+    + [Sample output:](#sample-output)
+    + [Steps:](#steps)
+  * [How to generate PPT with Chinese Lyric only? ( Generating Two Text Boxes)](#how-to-generate-ppt-with-chinese-lyric-only--generating-two-text-boxes)
+    + [Sample output:](#sample-output-1)
+    + [Steps:](#steps-1)
+  * [How to generate PPT with Chinese Lyric only? ( Generating OneText Box, Customizabe Row Count)](#how-to-generate-ppt-with-chinese-lyric-only--generating-onetext-box-customizabe-row-count)
+    + [Sample Output:](#sample-output-2)
+    + [Steps:](#steps-2)
+- [Documentation](#documentation)
+  * [Chinese Lyric Only Option](#chinese-lyric-only-option)
+  * [Use One Text Box Option](#use-one-text-box-option)
+  * [File Paths](#file-paths)
+    + [Relative Path](#relative-path)
+    + [Absolute Path](#absolute-path)
+  * [Main and Sub](#main-and-sub)
+  * [Font](#font)
+  * [Color](#color)
+  * [Border Weight](#border-weight)
+  * [Font Spacing](#font-spacing)
+  * [Line Space](#line-space)
+  * [Positioning](#positioning)
+  * [Preview](#preview)
+  * [Preset](#preset)
 
 # Manual
 
