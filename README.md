@@ -157,7 +157,7 @@ Follow the step 6-7 mentioned in the section above: How to generate PPT with Chi
 ## Main and Sub
 
 - Format settings can be done toward Main section and Sub section of the slide at Sheet 2 (Settings)
-- ![image-20220206191650866](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-image-20220206191650866.png)
+- ![image-20220206191650866](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191650866.png)
 - ![image-20220206191658168](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191658168.png)
 - ![image-20220206191547109](https://raw.githubusercontent.com/HowHow06/Ho2TyporaImages/main/img/image-20220206191547109.png)
 
