@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<general>
+		<pptPath>output.pptx</pptPath>
+		<backgroundImagePath>background\greenscreenWithBlackCover.png</backgroundImagePath>
+		<chineseLyricOnly enabled="0">
+			<oneTextField enabled="-1">
+				<numberOfRow>3</numberOfRow>
+			</oneTextField>
+		</chineseLyricOnly>
+	</general>
+	<main>
+		<font>
+			<fontName>Yuanti SC</fontName>
+			<fontColorR>248</fontColorR>
+			<fontColorG>248</fontColorG>
+			<fontColorB>248</fontColorB>
+			<fontSize>48</fontSize>
+			<fontBold>-1</fontBold>
+			<fontBorder enabled="0">
+				<colorR>0</colorR>
+				<colorG>0</colorG>
+				<colorB>0</colorB>
+				<weight>1.5</weight>
+			</fontBorder>
+		</font>
+		<shadow enabled="-1"></shadow>
+		<fontSpacing>0</fontSpacing>
+		<lineSpacingBefore>0</lineSpacingBefore>
+		<lineSpacingAfter>0</lineSpacingAfter>
+		<lineSpacingBetween>1</lineSpacingBetween>
+		<glow enabled="-1">
+			<size>8</size>
+			<transparency>0</transparency>
+			<colorR>0</colorR>
+			<colorG>0</colorG>
+			<colorB>0</colorB>
+		</glow>
+		<upperPosition>
+			<left>0</left>
+			<top>420.7172</top>
+			<width>960</width>
+			<height>90</height>
+		</upperPosition>
+		<lowerPosition>
+			<left>0</left>
+			<top>228.25</top>
+			<width>960</width>
+			<height>90</height>
+		</lowerPosition>
+	</main>
+	<sub>
+		<font>
+			<fontName>National Park Heavy</fontName>
+			<fontColorR>248</fontColorR>
+			<fontColorG>248</fontColorG>
+			<fontColorB>248</fontColorB>
+			<fontSize>32</fontSize>
+			<fontBold>0</fontBold>
+			<fontBorder enabled="0">
+				<colorR>0</colorR>
+				<colorG>0</colorG>
+				<colorB>0</colorB>
+				<weight>1.5</weight>
+			</fontBorder>
+		</font>
+		<shadow enabled="-1"></shadow>
+		<fontSpacing>0</fontSpacing>
+		<lineSpacingBefore>0</lineSpacingBefore>
+		<lineSpacingAfter>0</lineSpacingAfter>
+		<lineSpacingBetween>1</lineSpacingBetween>
+		<glow enabled="0">
+			<size>8</size>
+			<transparency>0</transparency>
+			<colorR>131</colorR>
+			<colorG>35</colorG>
+			<colorB>88</colorB>
+		</glow>
+		<upperPosition>
+			<left>0</left>
+			<top>470.8878</top>
+			<width>960</width>
+			<height>50.9</height>
+		</upperPosition>
+		<lowerPosition>
+			<left>0</left>
+			<top>306.8572</top>
+			<width>960</width>
+			<height>50.9</height>
+		</lowerPosition>
+	</sub>
+</config>
