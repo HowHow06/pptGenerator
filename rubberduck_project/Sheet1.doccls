@@ -137,9 +137,6 @@ Public isOneTextBox As Boolean
 Public numberOfRowsInTextBox As Integer
 
 
-
-
-
 Private Sub btnChooseBackground_Click()
     initConfigValue 'initialize the config value
     
@@ -267,6 +264,9 @@ Public Sub generatePreview()
     ' MsgBox "PPT Generated Successfully!"
 End Sub
 
+
+
+
 Private Sub btnGenerate_Click()
     initConfigValue 'initialize the config value
     If ThisWorkbook.isFileExists(fullPath) = False Or fullPath = "" Then
@@ -284,8 +284,8 @@ Private Sub btnGenerate_Click()
         linesPerRow = DEFAULT_NUMBER_OF_LINE_PER_ROW
     End If
 
-    cn_lyric = txtcn.Text
-    py_lyric = txtpy.Text
+    cn_lyric = txtcn.text
+    py_lyric = txtpy.text
     cnLyricArray = Split(cn_lyric, vbCrLf)
     pyLyricArray = Split(py_lyric, vbCrLf)
     
@@ -366,7 +366,7 @@ Private Sub InsertBackground(lineindex As Integer, numberOfRow As Integer)
         Dim strFileExists As String
         'to check if the background png is valid
         On Error Resume Next
-            Set shp = pre.Slides(index).Shapes.AddPicture(Filename:=bgPath, LinkToFile:=msoFalse, SaveWithDocument:=msoTrue, Left:=0, Top:=0, Width:=960, Height:=540)
+            Set shp = pre.Slides(index).Shapes.AddPicture(FileName:=bgPath, LinkToFile:=msoFalse, SaveWithDocument:=msoTrue, Left:=0, Top:=0, Width:=960, Height:=540)
     End If
 End Sub
 
@@ -391,7 +391,7 @@ Private Sub InsertPYLyric(lineindex As Integer, linePY As Variant)
                 .SpaceAfter = subLineSpacingAfter
                 .SpaceWithin = subLineSpacingBetween
             End With
-            .Text = linePY
+            .text = linePY
             With .Font
                 .Fill.ForeColor.RGB = RGB(subColorR, subColorG, subColorB)
                 .Name = subFont
@@ -417,7 +417,7 @@ Private Sub InsertPYLyric(lineindex As Integer, linePY As Variant)
                         .Blur = 2
                     End If
                 End With
-                With .line
+                With .Line
                     Dim visi As Integer
                     If subBorder = True Then
                         visi = -1
@@ -451,7 +451,7 @@ Private Sub InsertCNLyric(lineindex As Integer, lineCn As Variant)
                 .SpaceAfter = mainLineSpacingAfter
                 .SpaceWithin = mainLineSpacingBetween
             End With
-            .Text = lineCn
+            .text = lineCn
             With .Font
                 .Fill.ForeColor.RGB = RGB(mainColorR, mainColorG, mainColorB)
                 .NameFarEast = mainFont
@@ -478,7 +478,7 @@ Private Sub InsertCNLyric(lineindex As Integer, lineCn As Variant)
                     End If
                 End With
                 
-                With .line
+                With .Line
                     Dim visi As Integer
                     If mainBorder = True Then
                         visi = -1
@@ -543,7 +543,7 @@ Private Sub InserOneTextBoxLyric(lineindex As Integer, lyricLine As Variant, num
                     End If
                 End With
                 
-                With .line
+                With .Line
                     Dim visi As Integer
                     If mainBorder = True Then
                         visi = -1
@@ -653,7 +653,6 @@ isChineseOnly = ckbIsChineseOnly.value
 isOneTextBox = ckbIsOneField.value
 numberOfRowsInTextBox = txtNumberOfRow.value
 
-
 Set sheet = ThisWorkbook.Sheets("Sheet1")
 Set outputRng = sheet.Range("outputLyric")
 Set outputPy = sheet.Range("outputPinYin")
@@ -691,6 +690,8 @@ subGlowColorB = Sheet2.OLEObjects("txtSubGlowColorB").Object.value
 
 End Sub
 
+
+
 Private Sub ckbIsChineseOnly_Change()
     If ckbIsChineseOnly.value = False Then
         ckbIsOneField.Enabled = ckbIsChineseOnly.value
@@ -706,4 +707,127 @@ End Sub
 Private Sub ckbIsOneField_Change()
     lblNumberOfRow.Enabled = ckbIsOneField.value
     txtNumberOfRow.Enabled = ckbIsOneField.value
+End Sub
+
+
+Private Sub btnGeneratePinyin_Click()
+    initConfigValue 'initialize the config value
+    
+    Dim objStream, strData, outputString
+    Dim pinyinFile As String, pinyinString As String
+    Dim j, char_code, isPinyinNeedSound
+
+    'read the pinyin file
+    Set objStream = CreateObject("ADODB.Stream")
+    isPinyinNeedSound = ckbPinyinNeedSound.value
+    If isPinyinNeedSound Then
+        pinyinFile = ThisWorkbook.path & "\data\pinyin_with_sound_modified.txt"
+    Else
+        pinyinFile = ThisWorkbook.path & "\data\pinyin_without_sound_modified.txt"
+    End If
+
+    objStream.Charset = "utf-8"
+    objStream.Open
+    objStream.LoadFromFile (pinyinFile)
+    
+    strData = objStream.ReadText()
+    
+    objStream.Close
+    Set objStream = Nothing
+    
+    pinyinString = strData
+    'read the chinese text input
+    cn_lyric = txtcn.text
+    outputString = ""
+    
+    For i = 1 To Len(cn_lyric)
+        Dim character, position
+        character = Mid(cn_lyric, i, 1)
+        position = InStr(pinyinString, character)
+        char_code = Asc(character)
+        
+        If (char_code < 0 Or char_code > 200) And Not position = 0 Then
+            j = 1
+            Do While Not Mid(pinyinString, position + j, 1) = ","
+               outputString = outputString & Mid(pinyinString, position + j, 1)
+               j = j + 1
+            Loop
+            outputString = outputString & " "
+        Else
+          outputString = outputString & character
+        End If
+        
+    Next
+    
+    txtpy.text = outputString
+End Sub
+
+
+Private Sub btnGenerateSimplified_Click()
+    initConfigValue 'initialize the config value
+    Dim objStream, strData, outputString
+    Dim file As String, traditionalChineseChars As String, simplifiedChineseChars As String
+
+    'read the pinyin file
+    Set objStream = CreateObject("ADODB.Stream")
+    file = ThisWorkbook.path & "\data\traditional_chinese.txt"
+
+    objStream.Charset = "utf-8"
+    objStream.Open
+    objStream.LoadFromFile (file)
+    
+    strData = objStream.ReadText()
+    traditionalChineseChars = strData
+    
+    file = ThisWorkbook.path & "\data\simplified_chinese.txt"
+
+    objStream.LoadFromFile (file)
+    
+    strData = objStream.ReadText()
+    simplifiedChineseChars = strData
+    
+    objStream.Close
+    Set objStream = Nothing
+    
+    cn_lyric = txtcn.text
+    
+    For i = 1 To Len(cn_lyric)
+        Dim character, position
+        character = Mid(cn_lyric, i, 1)
+        position = InStr(traditionalChineseChars, character)
+        If Not position = 0 Then
+            outputString = outputString & Mid(simplifiedChineseChars, position, 1)
+        Else
+            outputString = outputString & character
+        End If
+    Next
+    
+    txtcn.text = outputString
+End Sub
+
+
+Private Sub btnConvertTa_Click()
+    initConfigValue
+    Dim toFindStr As String, replaceWithStr As String
+    toFindStr = "他"
+    replaceWithStr = "祂"
+    cn_lyric = txtcn.text
+    cn_lyric = Replace(cn_lyric, toFindStr, replaceWithStr)
+    txtcn.text = cn_lyric
+  
+End Sub
+
+
+Private Sub btnConvertNi_Click()
+    initConfigValue
+    Dim toFindStr As String, replaceWithStr As String
+    toFindStr = "你"
+    replaceWithStr = "祢"
+    cn_lyric = txtcn.text
+    cn_lyric = Replace(cn_lyric, toFindStr, replaceWithStr)
+    txtcn.text = cn_lyric
+End Sub
+
+Private Sub txtcn_Change()
+
 End Sub

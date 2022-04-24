@@ -48,6 +48,30 @@ Static Sub setSubBord(value As Variant)
     ckbSubBorder.value = value
 End Sub
 
+Private Sub btnLoadDefault1_Click()
+    loadDefault 1
+End Sub
+
+Private Sub btnLoadDefault2_Click()
+    loadDefault 2
+End Sub
+
+Private Sub btnLoadDefault3_Click()
+    loadDefault 3
+End Sub
+
+Private Sub btnLoadDefault4_Click()
+    loadDefault 4
+End Sub
+
+Private Sub btnLoadDefault5_Click()
+    loadDefault 5
+End Sub
+
+Private Sub btnLoadDefault6_Click()
+    loadDefault 6
+End Sub
+
 Private Sub btnLoadPreset1_Click()
     loadPreset 1
 End Sub
@@ -151,6 +175,139 @@ Private Sub btnSubColorPicker_Click()
 End Sub
 
 
+Private Sub loadDefault(presetNo As Integer)
+    Dim filePath As String
+    filePath = ActiveWorkbook.path & "\config\default\preset_" & presetNo & ".xml"
+    
+    If Not ThisWorkbook.isFileExists(filePath) Then
+        MsgBox "Default Preset " & presetNo & " is empty!"
+        Exit Sub
+    End If
+    
+'On Error GoTo ErrHandle
+    Sheet1.initConfigValue
+    Dim XDoc As Object
+    
+    Set XDoc = CreateObject("MSXML2.DOMDocument.6.0")
+    XDoc.async = False: XDoc.validateOnParse = False
+    XDoc.Load (filePath)
+    Set generalNode = XDoc.SelectSingleNode("//config/general")
+    Set mainNode = XDoc.SelectSingleNode("//config/main")
+    Set subNode = XDoc.SelectSingleNode("//config/sub")
+    
+    'set general
+    Sheet1.Range("pptPath").value = generalNode.SelectSingleNode("pptPath").text
+    Sheet1.Range("bgPath").value = generalNode.SelectSingleNode("backgroundImagePath").text
+    Set chineseLyricOnlyNode = generalNode.SelectSingleNode("chineseLyricOnly")
+    Sheet1.OLEObjects("ckbIsChineseOnly").Object.value = CBool(chineseLyricOnlyNode.Attributes(0).text)
+    Sheet1.OLEObjects("ckbIsOneField").Object.value = CBool(chineseLyricOnlyNode.SelectSingleNode("oneTextField").Attributes(0).text)
+    Sheet1.OLEObjects("txtNumberOfRow").Object.value = chineseLyricOnlyNode.SelectSingleNode("oneTextField/numberOfRow").text
+    
+    
+    ' set main
+    Set fontNode = mainNode.SelectSingleNode("font")
+    Sheet1.mainFontRng.value = fontNode.SelectSingleNode("fontName").text
+    Sheet1.mainColorRRng.value = fontNode.SelectSingleNode("fontColorR").text
+    Sheet1.mainColorGRng.value = fontNode.SelectSingleNode("fontColorG").text
+    Sheet1.mainColorBRng.value = fontNode.SelectSingleNode("fontColorB").text
+    Sheet1.mainSizeRng.value = fontNode.SelectSingleNode("fontSize").text
+    setMainBold CBool(fontNode.SelectSingleNode("fontBold").text)
+    'main border
+    Set fontBorderNode = fontNode.SelectSingleNode("fontBorder")
+    setMainBord CBool(fontBorderNode.Attributes(0).text)
+    Sheet1.mainBorderRRng.value = fontBorderNode.SelectSingleNode("colorR").text
+    Sheet1.mainBorderGRng.value = fontBorderNode.SelectSingleNode("colorG").text
+    Sheet1.mainBorderBRng.value = fontBorderNode.SelectSingleNode("colorB").text
+    Sheet1.mainBorderWeightRng.value = fontBorderNode.SelectSingleNode("weight").text
+    'main shadow
+    ckbMainHasShadow.value = CBool(mainNode.SelectSingleNode("shadow").Attributes(0).text)
+    
+    'main spacing
+    txtMainFontSpacing.value = mainNode.SelectSingleNode("fontSpacing").text
+    txtMainLineSpacingBefore = mainNode.SelectSingleNode("lineSpacingBefore").text
+    txtMainLineSpacingAfter = mainNode.SelectSingleNode("lineSpacingAfter").text
+    txtMainLineSpacingBetween = mainNode.SelectSingleNode("lineSpacingBetween").text
+    
+    'main glow
+    Set glowNode = mainNode.SelectSingleNode("glow")
+    ckbMainHasGlow.value = CBool(glowNode.Attributes(0).text)
+    txtMainGlowSize = glowNode.SelectSingleNode("size").text
+    txtMainGlowTransparency = glowNode.SelectSingleNode("transparency").text
+    txtMainGlowColorR = glowNode.SelectSingleNode("colorR").text
+    txtMainGlowColorG = glowNode.SelectSingleNode("colorG").text
+    txtMainGlowColorB = glowNode.SelectSingleNode("colorB").text
+    
+    'main upper position
+    Set positionNode = mainNode.SelectSingleNode("upperPosition")
+    Sheet1.mainLeft1Rng.value = positionNode.SelectSingleNode("left").text
+    Sheet1.mainTop1Rng.value = positionNode.SelectSingleNode("top").text
+    Sheet1.mainWidth1Rng.value = positionNode.SelectSingleNode("width").text
+    Sheet1.mainHeight1Rng.value = positionNode.SelectSingleNode("height").text
+    
+    'main lower position
+    Set positionNode = mainNode.SelectSingleNode("lowerPosition")
+    Sheet1.mainLeft2Rng.value = positionNode.SelectSingleNode("left").text
+    Sheet1.mainTop2Rng.value = positionNode.SelectSingleNode("top").text
+    Sheet1.mainWidth2Rng.value = positionNode.SelectSingleNode("width").text
+    Sheet1.mainHeight2Rng.value = positionNode.SelectSingleNode("height").text
+    
+    ' set sub--------------------------------------------------------------------------------------
+    Set fontNode = subNode.SelectSingleNode("font")
+    Sheet1.subFontRng.value = fontNode.SelectSingleNode("fontName").text
+    Sheet1.subColorRRng.value = fontNode.SelectSingleNode("fontColorR").text
+    Sheet1.subColorGRng.value = fontNode.SelectSingleNode("fontColorG").text
+    Sheet1.subColorBRng.value = fontNode.SelectSingleNode("fontColorB").text
+    Sheet1.subSizeRng.value = fontNode.SelectSingleNode("fontSize").text
+    setSubBold CBool(fontNode.SelectSingleNode("fontBold").text)
+    'sub border
+    Set fontBorderNode = fontNode.SelectSingleNode("fontBorder")
+    setSubBord CBool(fontBorderNode.Attributes(0).text)
+    Sheet1.subBorderRRng.value = fontBorderNode.SelectSingleNode("colorR").text
+    Sheet1.subBorderGRng.value = fontBorderNode.SelectSingleNode("colorG").text
+    Sheet1.subBorderBRng.value = fontBorderNode.SelectSingleNode("colorB").text
+    Sheet1.subBorderWeightRng.value = fontBorderNode.SelectSingleNode("weight").text
+    
+    'sub shadow
+    ckbSubHasShadow.value = CBool(subNode.SelectSingleNode("shadow").Attributes(0).text)
+    
+    'sub spacing
+    txtSubFontSpacing.value = subNode.SelectSingleNode("fontSpacing").text
+    txtSubLineSpacingBefore = subNode.SelectSingleNode("lineSpacingBefore").text
+    txtSubLineSpacingAfter = subNode.SelectSingleNode("lineSpacingAfter").text
+    txtSubLineSpacingBetween = subNode.SelectSingleNode("lineSpacingBetween").text
+    
+    'sub glow
+    Set glowNode = subNode.SelectSingleNode("glow")
+    ckbSubHasGlow.value = CBool(glowNode.Attributes(0).text)
+    txtSubGlowSize = glowNode.SelectSingleNode("size").text
+    txtSubGlowTransparency = glowNode.SelectSingleNode("transparency").text
+    txtSubGlowColorR = glowNode.SelectSingleNode("colorR").text
+    txtSubGlowColorG = glowNode.SelectSingleNode("colorG").text
+    txtSubGlowColorB = glowNode.SelectSingleNode("colorB").text
+    
+    'sub upper position
+    Set positionNode = subNode.SelectSingleNode("upperPosition")
+    Sheet1.subLeft1Rng.value = positionNode.SelectSingleNode("left").text
+    Sheet1.subTop1Rng.value = positionNode.SelectSingleNode("top").text
+    Sheet1.subWidth1Rng.value = positionNode.SelectSingleNode("width").text
+    Sheet1.subHeight1Rng.value = positionNode.SelectSingleNode("height").text
+    
+    'sub lower position
+    Set positionNode = subNode.SelectSingleNode("lowerPosition")
+    Sheet1.subLeft2Rng.value = positionNode.SelectSingleNode("left").text
+    Sheet1.subTop2Rng.value = positionNode.SelectSingleNode("top").text
+    Sheet1.subWidth2Rng.value = positionNode.SelectSingleNode("width").text
+    Sheet1.subHeight2Rng.value = positionNode.SelectSingleNode("height").text
+    
+    MsgBox "Loaded default preset " & presetNo, vbInformation
+    Exit Sub
+ErrHandle:
+   MsgBox Err.Number & " - " & Err.Description, vbCritical
+   Exit Sub
+
+End Sub
+
+
 Private Sub loadPreset(presetNo As Integer)
     Dim filePath As String
     filePath = ActiveWorkbook.path & "\config\preset_" & presetNo & ".xml"
@@ -172,108 +329,108 @@ Private Sub loadPreset(presetNo As Integer)
     Set subNode = XDoc.SelectSingleNode("//config/sub")
     
     'set general
-    Sheet1.Range("pptPath").value = generalNode.SelectSingleNode("pptPath").Text
-    Sheet1.Range("bgPath").value = generalNode.SelectSingleNode("backgroundImagePath").Text
+    Sheet1.Range("pptPath").value = generalNode.SelectSingleNode("pptPath").text
+    Sheet1.Range("bgPath").value = generalNode.SelectSingleNode("backgroundImagePath").text
     Set chineseLyricOnlyNode = generalNode.SelectSingleNode("chineseLyricOnly")
-    Sheet1.OLEObjects("ckbIsChineseOnly").Object.value = CBool(chineseLyricOnlyNode.Attributes(0).Text)
-    Sheet1.OLEObjects("ckbIsOneField").Object.value = CBool(chineseLyricOnlyNode.SelectSingleNode("oneTextField").Attributes(0).Text)
-    Sheet1.OLEObjects("txtNumberOfRow").Object.value = chineseLyricOnlyNode.SelectSingleNode("oneTextField/numberOfRow").Text
+    Sheet1.OLEObjects("ckbIsChineseOnly").Object.value = CBool(chineseLyricOnlyNode.Attributes(0).text)
+    Sheet1.OLEObjects("ckbIsOneField").Object.value = CBool(chineseLyricOnlyNode.SelectSingleNode("oneTextField").Attributes(0).text)
+    Sheet1.OLEObjects("txtNumberOfRow").Object.value = chineseLyricOnlyNode.SelectSingleNode("oneTextField/numberOfRow").text
     
     
     ' set main
     Set fontNode = mainNode.SelectSingleNode("font")
-    Sheet1.mainFontRng.value = fontNode.SelectSingleNode("fontName").Text
-    Sheet1.mainColorRRng.value = fontNode.SelectSingleNode("fontColorR").Text
-    Sheet1.mainColorGRng.value = fontNode.SelectSingleNode("fontColorG").Text
-    Sheet1.mainColorBRng.value = fontNode.SelectSingleNode("fontColorB").Text
-    Sheet1.mainSizeRng.value = fontNode.SelectSingleNode("fontSize").Text
-    setMainBold CBool(fontNode.SelectSingleNode("fontBold").Text)
+    Sheet1.mainFontRng.value = fontNode.SelectSingleNode("fontName").text
+    Sheet1.mainColorRRng.value = fontNode.SelectSingleNode("fontColorR").text
+    Sheet1.mainColorGRng.value = fontNode.SelectSingleNode("fontColorG").text
+    Sheet1.mainColorBRng.value = fontNode.SelectSingleNode("fontColorB").text
+    Sheet1.mainSizeRng.value = fontNode.SelectSingleNode("fontSize").text
+    setMainBold CBool(fontNode.SelectSingleNode("fontBold").text)
     'main border
     Set fontBorderNode = fontNode.SelectSingleNode("fontBorder")
-    setMainBord CBool(fontBorderNode.Attributes(0).Text)
-    Sheet1.mainBorderRRng.value = fontBorderNode.SelectSingleNode("colorR").Text
-    Sheet1.mainBorderGRng.value = fontBorderNode.SelectSingleNode("colorG").Text
-    Sheet1.mainBorderBRng.value = fontBorderNode.SelectSingleNode("colorB").Text
-    Sheet1.mainBorderWeightRng.value = fontBorderNode.SelectSingleNode("weight").Text
+    setMainBord CBool(fontBorderNode.Attributes(0).text)
+    Sheet1.mainBorderRRng.value = fontBorderNode.SelectSingleNode("colorR").text
+    Sheet1.mainBorderGRng.value = fontBorderNode.SelectSingleNode("colorG").text
+    Sheet1.mainBorderBRng.value = fontBorderNode.SelectSingleNode("colorB").text
+    Sheet1.mainBorderWeightRng.value = fontBorderNode.SelectSingleNode("weight").text
     'main shadow
-    ckbMainHasShadow.value = CBool(mainNode.SelectSingleNode("shadow").Attributes(0).Text)
+    ckbMainHasShadow.value = CBool(mainNode.SelectSingleNode("shadow").Attributes(0).text)
     
     'main spacing
-    txtMainFontSpacing.value = mainNode.SelectSingleNode("fontSpacing").Text
-    txtMainLineSpacingBefore = mainNode.SelectSingleNode("lineSpacingBefore").Text
-    txtMainLineSpacingAfter = mainNode.SelectSingleNode("lineSpacingAfter").Text
-    txtMainLineSpacingBetween = mainNode.SelectSingleNode("lineSpacingBetween").Text
+    txtMainFontSpacing.value = mainNode.SelectSingleNode("fontSpacing").text
+    txtMainLineSpacingBefore = mainNode.SelectSingleNode("lineSpacingBefore").text
+    txtMainLineSpacingAfter = mainNode.SelectSingleNode("lineSpacingAfter").text
+    txtMainLineSpacingBetween = mainNode.SelectSingleNode("lineSpacingBetween").text
     
     'main glow
     Set glowNode = mainNode.SelectSingleNode("glow")
-    ckbMainHasGlow.value = CBool(glowNode.Attributes(0).Text)
-    txtMainGlowSize = glowNode.SelectSingleNode("size").Text
-    txtMainGlowTransparency = glowNode.SelectSingleNode("transparency").Text
-    txtMainGlowColorR = glowNode.SelectSingleNode("colorR").Text
-    txtMainGlowColorG = glowNode.SelectSingleNode("colorG").Text
-    txtMainGlowColorB = glowNode.SelectSingleNode("colorB").Text
+    ckbMainHasGlow.value = CBool(glowNode.Attributes(0).text)
+    txtMainGlowSize = glowNode.SelectSingleNode("size").text
+    txtMainGlowTransparency = glowNode.SelectSingleNode("transparency").text
+    txtMainGlowColorR = glowNode.SelectSingleNode("colorR").text
+    txtMainGlowColorG = glowNode.SelectSingleNode("colorG").text
+    txtMainGlowColorB = glowNode.SelectSingleNode("colorB").text
     
     'main upper position
     Set positionNode = mainNode.SelectSingleNode("upperPosition")
-    Sheet1.mainLeft1Rng.value = positionNode.SelectSingleNode("left").Text
-    Sheet1.mainTop1Rng.value = positionNode.SelectSingleNode("top").Text
-    Sheet1.mainWidth1Rng.value = positionNode.SelectSingleNode("width").Text
-    Sheet1.mainHeight1Rng.value = positionNode.SelectSingleNode("height").Text
+    Sheet1.mainLeft1Rng.value = positionNode.SelectSingleNode("left").text
+    Sheet1.mainTop1Rng.value = positionNode.SelectSingleNode("top").text
+    Sheet1.mainWidth1Rng.value = positionNode.SelectSingleNode("width").text
+    Sheet1.mainHeight1Rng.value = positionNode.SelectSingleNode("height").text
     
     'main lower position
     Set positionNode = mainNode.SelectSingleNode("lowerPosition")
-    Sheet1.mainLeft2Rng.value = positionNode.SelectSingleNode("left").Text
-    Sheet1.mainTop2Rng.value = positionNode.SelectSingleNode("top").Text
-    Sheet1.mainWidth2Rng.value = positionNode.SelectSingleNode("width").Text
-    Sheet1.mainHeight2Rng.value = positionNode.SelectSingleNode("height").Text
+    Sheet1.mainLeft2Rng.value = positionNode.SelectSingleNode("left").text
+    Sheet1.mainTop2Rng.value = positionNode.SelectSingleNode("top").text
+    Sheet1.mainWidth2Rng.value = positionNode.SelectSingleNode("width").text
+    Sheet1.mainHeight2Rng.value = positionNode.SelectSingleNode("height").text
     
     ' set sub--------------------------------------------------------------------------------------
     Set fontNode = subNode.SelectSingleNode("font")
-    Sheet1.subFontRng.value = fontNode.SelectSingleNode("fontName").Text
-    Sheet1.subColorRRng.value = fontNode.SelectSingleNode("fontColorR").Text
-    Sheet1.subColorGRng.value = fontNode.SelectSingleNode("fontColorG").Text
-    Sheet1.subColorBRng.value = fontNode.SelectSingleNode("fontColorB").Text
-    Sheet1.subSizeRng.value = fontNode.SelectSingleNode("fontSize").Text
-    setSubBold CBool(fontNode.SelectSingleNode("fontBold").Text)
+    Sheet1.subFontRng.value = fontNode.SelectSingleNode("fontName").text
+    Sheet1.subColorRRng.value = fontNode.SelectSingleNode("fontColorR").text
+    Sheet1.subColorGRng.value = fontNode.SelectSingleNode("fontColorG").text
+    Sheet1.subColorBRng.value = fontNode.SelectSingleNode("fontColorB").text
+    Sheet1.subSizeRng.value = fontNode.SelectSingleNode("fontSize").text
+    setSubBold CBool(fontNode.SelectSingleNode("fontBold").text)
     'sub border
     Set fontBorderNode = fontNode.SelectSingleNode("fontBorder")
-    setSubBord CBool(fontBorderNode.Attributes(0).Text)
-    Sheet1.subBorderRRng.value = fontBorderNode.SelectSingleNode("colorR").Text
-    Sheet1.subBorderGRng.value = fontBorderNode.SelectSingleNode("colorG").Text
-    Sheet1.subBorderBRng.value = fontBorderNode.SelectSingleNode("colorB").Text
-    Sheet1.subBorderWeightRng.value = fontBorderNode.SelectSingleNode("weight").Text
+    setSubBord CBool(fontBorderNode.Attributes(0).text)
+    Sheet1.subBorderRRng.value = fontBorderNode.SelectSingleNode("colorR").text
+    Sheet1.subBorderGRng.value = fontBorderNode.SelectSingleNode("colorG").text
+    Sheet1.subBorderBRng.value = fontBorderNode.SelectSingleNode("colorB").text
+    Sheet1.subBorderWeightRng.value = fontBorderNode.SelectSingleNode("weight").text
     
     'sub shadow
-    ckbSubHasShadow.value = CBool(subNode.SelectSingleNode("shadow").Attributes(0).Text)
+    ckbSubHasShadow.value = CBool(subNode.SelectSingleNode("shadow").Attributes(0).text)
     
     'sub spacing
-    txtSubFontSpacing.value = subNode.SelectSingleNode("fontSpacing").Text
-    txtSubLineSpacingBefore = subNode.SelectSingleNode("lineSpacingBefore").Text
-    txtSubLineSpacingAfter = subNode.SelectSingleNode("lineSpacingAfter").Text
-    txtSubLineSpacingBetween = subNode.SelectSingleNode("lineSpacingBetween").Text
+    txtSubFontSpacing.value = subNode.SelectSingleNode("fontSpacing").text
+    txtSubLineSpacingBefore = subNode.SelectSingleNode("lineSpacingBefore").text
+    txtSubLineSpacingAfter = subNode.SelectSingleNode("lineSpacingAfter").text
+    txtSubLineSpacingBetween = subNode.SelectSingleNode("lineSpacingBetween").text
     
     'sub glow
     Set glowNode = subNode.SelectSingleNode("glow")
-    ckbSubHasGlow.value = CBool(glowNode.Attributes(0).Text)
-    txtSubGlowSize = glowNode.SelectSingleNode("size").Text
-    txtSubGlowTransparency = glowNode.SelectSingleNode("transparency").Text
-    txtSubGlowColorR = glowNode.SelectSingleNode("colorR").Text
-    txtSubGlowColorG = glowNode.SelectSingleNode("colorG").Text
-    txtSubGlowColorB = glowNode.SelectSingleNode("colorB").Text
+    ckbSubHasGlow.value = CBool(glowNode.Attributes(0).text)
+    txtSubGlowSize = glowNode.SelectSingleNode("size").text
+    txtSubGlowTransparency = glowNode.SelectSingleNode("transparency").text
+    txtSubGlowColorR = glowNode.SelectSingleNode("colorR").text
+    txtSubGlowColorG = glowNode.SelectSingleNode("colorG").text
+    txtSubGlowColorB = glowNode.SelectSingleNode("colorB").text
     
     'sub upper position
     Set positionNode = subNode.SelectSingleNode("upperPosition")
-    Sheet1.subLeft1Rng.value = positionNode.SelectSingleNode("left").Text
-    Sheet1.subTop1Rng.value = positionNode.SelectSingleNode("top").Text
-    Sheet1.subWidth1Rng.value = positionNode.SelectSingleNode("width").Text
-    Sheet1.subHeight1Rng.value = positionNode.SelectSingleNode("height").Text
+    Sheet1.subLeft1Rng.value = positionNode.SelectSingleNode("left").text
+    Sheet1.subTop1Rng.value = positionNode.SelectSingleNode("top").text
+    Sheet1.subWidth1Rng.value = positionNode.SelectSingleNode("width").text
+    Sheet1.subHeight1Rng.value = positionNode.SelectSingleNode("height").text
     
     'sub lower position
     Set positionNode = subNode.SelectSingleNode("lowerPosition")
-    Sheet1.subLeft2Rng.value = positionNode.SelectSingleNode("left").Text
-    Sheet1.subTop2Rng.value = positionNode.SelectSingleNode("top").Text
-    Sheet1.subWidth2Rng.value = positionNode.SelectSingleNode("width").Text
-    Sheet1.subHeight2Rng.value = positionNode.SelectSingleNode("height").Text
+    Sheet1.subLeft2Rng.value = positionNode.SelectSingleNode("left").text
+    Sheet1.subTop2Rng.value = positionNode.SelectSingleNode("top").text
+    Sheet1.subWidth2Rng.value = positionNode.SelectSingleNode("width").text
+    Sheet1.subHeight2Rng.value = positionNode.SelectSingleNode("height").text
     
     MsgBox "Loaded preset " & presetNo, vbInformation
     Exit Sub
@@ -302,11 +459,11 @@ On Error GoTo ErrHandle
     root.appendChild general
     
     Set pptPath = XDoc.createElement("pptPath")
-    pptPath.Text = Sheet1.pptPath
+    pptPath.text = Sheet1.pptPath
     general.appendChild pptPath
     
     Set backgroundImagePath = XDoc.createElement("backgroundImagePath")
-    backgroundImagePath.Text = Sheet1.bgPath
+    backgroundImagePath.text = Sheet1.bgPath
     general.appendChild backgroundImagePath
     
     Set chineseLyricOnly = XDoc.createElement("chineseLyricOnly")
@@ -324,7 +481,7 @@ On Error GoTo ErrHandle
     oneTextField.setAttributeNode rel
     
      Set numberOfRow = XDoc.createElement("numberOfRow")
-    numberOfRow.Text = Sheet1.numberOfRowsInTextBox
+    numberOfRow.text = Sheet1.numberOfRowsInTextBox
     oneTextField.appendChild numberOfRow
          
     'Add main to root
@@ -336,24 +493,24 @@ On Error GoTo ErrHandle
     main.appendChild Font
     
     Set FontName = XDoc.createElement("fontName")
-    FontName.Text = Sheet1.mainFont
+    FontName.text = Sheet1.mainFont
     Font.appendChild FontName
     
     Set FontColorR = XDoc.createElement("fontColorR")
-    FontColorR.Text = Sheet1.mainColorR
+    FontColorR.text = Sheet1.mainColorR
     Font.appendChild FontColorR
     Set FontColorG = XDoc.createElement("fontColorG")
-    FontColorG.Text = Sheet1.mainColorG
+    FontColorG.text = Sheet1.mainColorG
     Font.appendChild FontColorG
     Set FontColorB = XDoc.createElement("fontColorB")
-    FontColorB.Text = Sheet1.mainColorB
+    FontColorB.text = Sheet1.mainColorB
     Font.appendChild FontColorB
     
     Set FontSize = XDoc.createElement("fontSize")
-    FontSize.Text = Sheet1.mainSize
+    FontSize.text = Sheet1.mainSize
     Font.appendChild FontSize
     Set FontBold = XDoc.createElement("fontBold")
-    FontBold.Text = Sheet1.mainBold
+    FontBold.text = Sheet1.mainBold
     Font.appendChild FontBold
     
     ' for main font border
@@ -365,17 +522,17 @@ On Error GoTo ErrHandle
     fontBorder.setAttributeNode rel
     
     Set colorR = XDoc.createElement("colorR")
-    colorR.Text = Sheet1.mainBorderR
+    colorR.text = Sheet1.mainBorderR
     fontBorder.appendChild colorR
     Set colorG = XDoc.createElement("colorG")
-    colorG.Text = Sheet1.mainBorderG
+    colorG.text = Sheet1.mainBorderG
     fontBorder.appendChild colorG
     Set colorB = XDoc.createElement("colorB")
-    colorB.Text = Sheet1.mainBorderB
+    colorB.text = Sheet1.mainBorderB
     fontBorder.appendChild colorB
     
     Set Weight = XDoc.createElement("weight")
-    Weight.Text = Sheet1.mainBorderWeight
+    Weight.text = Sheet1.mainBorderWeight
     fontBorder.appendChild Weight
     
     'main shadow
@@ -387,19 +544,19 @@ On Error GoTo ErrHandle
     
     'main spacing
     Set fontSpacing = XDoc.createElement("fontSpacing")
-    fontSpacing.Text = Sheet1.mainFontSpacing
+    fontSpacing.text = Sheet1.mainFontSpacing
     main.appendChild fontSpacing
     
     Set lineSpacingBefore = XDoc.createElement("lineSpacingBefore")
-    lineSpacingBefore.Text = Sheet1.mainLineSpacingBefore
+    lineSpacingBefore.text = Sheet1.mainLineSpacingBefore
     main.appendChild lineSpacingBefore
     
      Set lineSpacingAfter = XDoc.createElement("lineSpacingAfter")
-    lineSpacingAfter.Text = Sheet1.mainLineSpacingAfter
+    lineSpacingAfter.text = Sheet1.mainLineSpacingAfter
     main.appendChild lineSpacingAfter
     
      Set lineSpacingBetween = XDoc.createElement("lineSpacingBetween")
-    lineSpacingBetween.Text = Sheet1.mainLineSpacingBetween
+    lineSpacingBetween.text = Sheet1.mainLineSpacingBetween
     main.appendChild lineSpacingBetween
     
     'main glow
@@ -410,19 +567,19 @@ On Error GoTo ErrHandle
     Glow.setAttributeNode rel
     
     Set Size = XDoc.createElement("size")
-    Size.Text = Sheet1.mainGlowSize
+    Size.text = Sheet1.mainGlowSize
     Glow.appendChild Size
     Set Transparency = XDoc.createElement("transparency")
-    Transparency.Text = Sheet1.mainGlowTransparency
+    Transparency.text = Sheet1.mainGlowTransparency
     Glow.appendChild Transparency
     Set colorR = XDoc.createElement("colorR")
-    colorR.Text = Sheet1.mainGlowColorR
+    colorR.text = Sheet1.mainGlowColorR
     Glow.appendChild colorR
     Set colorG = XDoc.createElement("colorG")
-    colorG.Text = Sheet1.mainGlowColorG
+    colorG.text = Sheet1.mainGlowColorG
     Glow.appendChild colorG
     Set colorB = XDoc.createElement("colorB")
-    colorB.Text = Sheet1.mainGlowColorB
+    colorB.text = Sheet1.mainGlowColorB
     Glow.appendChild colorB
         
     ' main upper position
@@ -430,19 +587,19 @@ On Error GoTo ErrHandle
     main.appendChild upperPosition
     
     Set PositionLeft = XDoc.createElement("left")
-    PositionLeft.Text = Sheet1.mainLeft1
+    PositionLeft.text = Sheet1.mainLeft1
     upperPosition.appendChild PositionLeft
     
     Set PositionTop = XDoc.createElement("top")
-    PositionTop.Text = Sheet1.mainTop1
+    PositionTop.text = Sheet1.mainTop1
     upperPosition.appendChild PositionTop
     
     Set PositionWidth = XDoc.createElement("width")
-    PositionWidth.Text = Sheet1.mainWidth1
+    PositionWidth.text = Sheet1.mainWidth1
     upperPosition.appendChild PositionWidth
     
     Set PositionHeight = XDoc.createElement("height")
-    PositionHeight.Text = Sheet1.mainHeight1
+    PositionHeight.text = Sheet1.mainHeight1
     upperPosition.appendChild PositionHeight
     
     ' main lower position
@@ -450,19 +607,19 @@ On Error GoTo ErrHandle
     main.appendChild lowerPosition
     
     Set PositionLeft = XDoc.createElement("left")
-    PositionLeft.Text = Sheet1.mainLeft2
+    PositionLeft.text = Sheet1.mainLeft2
     lowerPosition.appendChild PositionLeft
     
     Set PositionTop = XDoc.createElement("top")
-    PositionTop.Text = Sheet1.mainTop2
+    PositionTop.text = Sheet1.mainTop2
     lowerPosition.appendChild PositionTop
     
     Set PositionWidth = XDoc.createElement("width")
-    PositionWidth.Text = Sheet1.mainWidth2
+    PositionWidth.text = Sheet1.mainWidth2
     lowerPosition.appendChild PositionWidth
     
     Set PositionHeight = XDoc.createElement("height")
-    PositionHeight.Text = Sheet1.mainHeight2
+    PositionHeight.text = Sheet1.mainHeight2
     lowerPosition.appendChild PositionHeight
         
     '---below is for sub-----------------------------------------
@@ -476,24 +633,24 @@ On Error GoTo ErrHandle
     secondary.appendChild Font
     
     Set FontName = XDoc.createElement("fontName")
-    FontName.Text = Sheet1.subFont
+    FontName.text = Sheet1.subFont
     Font.appendChild FontName
     
     Set FontColorR = XDoc.createElement("fontColorR")
-    FontColorR.Text = Sheet1.subColorR
+    FontColorR.text = Sheet1.subColorR
     Font.appendChild FontColorR
     Set FontColorG = XDoc.createElement("fontColorG")
-    FontColorG.Text = Sheet1.subColorG
+    FontColorG.text = Sheet1.subColorG
     Font.appendChild FontColorG
     Set FontColorB = XDoc.createElement("fontColorB")
-    FontColorB.Text = Sheet1.subColorB
+    FontColorB.text = Sheet1.subColorB
     Font.appendChild FontColorB
     
     Set FontSize = XDoc.createElement("fontSize")
-    FontSize.Text = Sheet1.subSize
+    FontSize.text = Sheet1.subSize
     Font.appendChild FontSize
     Set FontBold = XDoc.createElement("fontBold")
-    FontBold.Text = Sheet1.subBold
+    FontBold.text = Sheet1.subBold
     Font.appendChild FontBold
     
     ' for secondary font border
@@ -505,17 +662,17 @@ On Error GoTo ErrHandle
     fontBorder.setAttributeNode rel
     
     Set colorR = XDoc.createElement("colorR")
-    colorR.Text = Sheet1.subBorderR
+    colorR.text = Sheet1.subBorderR
     fontBorder.appendChild colorR
     Set colorG = XDoc.createElement("colorG")
-    colorG.Text = Sheet1.subBorderG
+    colorG.text = Sheet1.subBorderG
     fontBorder.appendChild colorG
     Set colorB = XDoc.createElement("colorB")
-    colorB.Text = Sheet1.subBorderB
+    colorB.text = Sheet1.subBorderB
     fontBorder.appendChild colorB
     
     Set Weight = XDoc.createElement("weight")
-    Weight.Text = Sheet1.subBorderWeight
+    Weight.text = Sheet1.subBorderWeight
     fontBorder.appendChild Weight
     
     'sub shadow
@@ -527,19 +684,19 @@ On Error GoTo ErrHandle
     
     'sub spacing
     Set fontSpacing = XDoc.createElement("fontSpacing")
-    fontSpacing.Text = Sheet1.subFontSpacing
+    fontSpacing.text = Sheet1.subFontSpacing
     secondary.appendChild fontSpacing
     
     Set lineSpacingBefore = XDoc.createElement("lineSpacingBefore")
-    lineSpacingBefore.Text = Sheet1.subLineSpacingBefore
+    lineSpacingBefore.text = Sheet1.subLineSpacingBefore
     secondary.appendChild lineSpacingBefore
     
      Set lineSpacingAfter = XDoc.createElement("lineSpacingAfter")
-    lineSpacingAfter.Text = Sheet1.subLineSpacingAfter
+    lineSpacingAfter.text = Sheet1.subLineSpacingAfter
     secondary.appendChild lineSpacingAfter
     
      Set lineSpacingBetween = XDoc.createElement("lineSpacingBetween")
-    lineSpacingBetween.Text = Sheet1.subLineSpacingBetween
+    lineSpacingBetween.text = Sheet1.subLineSpacingBetween
     secondary.appendChild lineSpacingBetween
     
     'sub glow
@@ -550,19 +707,19 @@ On Error GoTo ErrHandle
     Glow.setAttributeNode rel
     
     Set Size = XDoc.createElement("size")
-    Size.Text = Sheet1.subGlowSize
+    Size.text = Sheet1.subGlowSize
     Glow.appendChild Size
     Set Transparency = XDoc.createElement("transparency")
-    Transparency.Text = Sheet1.subGlowTransparency
+    Transparency.text = Sheet1.subGlowTransparency
     Glow.appendChild Transparency
     Set colorR = XDoc.createElement("colorR")
-    colorR.Text = Sheet1.subGlowColorR
+    colorR.text = Sheet1.subGlowColorR
     Glow.appendChild colorR
     Set colorG = XDoc.createElement("colorG")
-    colorG.Text = Sheet1.subGlowColorG
+    colorG.text = Sheet1.subGlowColorG
     Glow.appendChild colorG
     Set colorB = XDoc.createElement("colorB")
-    colorB.Text = Sheet1.subGlowColorB
+    colorB.text = Sheet1.subGlowColorB
     Glow.appendChild colorB
     
     
@@ -572,19 +729,19 @@ On Error GoTo ErrHandle
     secondary.appendChild upperPosition
     
     Set PositionLeft = XDoc.createElement("left")
-    PositionLeft.Text = Sheet1.subLeft1
+    PositionLeft.text = Sheet1.subLeft1
     upperPosition.appendChild PositionLeft
     
     Set PositionTop = XDoc.createElement("top")
-    PositionTop.Text = Sheet1.subTop1
+    PositionTop.text = Sheet1.subTop1
     upperPosition.appendChild PositionTop
     
     Set PositionWidth = XDoc.createElement("width")
-    PositionWidth.Text = Sheet1.subWidth1
+    PositionWidth.text = Sheet1.subWidth1
     upperPosition.appendChild PositionWidth
     
     Set PositionHeight = XDoc.createElement("height")
-    PositionHeight.Text = Sheet1.subHeight1
+    PositionHeight.text = Sheet1.subHeight1
     upperPosition.appendChild PositionHeight
     
     ' secondary lower position
@@ -592,19 +749,19 @@ On Error GoTo ErrHandle
     secondary.appendChild lowerPosition
     
     Set PositionLeft = XDoc.createElement("left")
-    PositionLeft.Text = Sheet1.subLeft2
+    PositionLeft.text = Sheet1.subLeft2
     lowerPosition.appendChild PositionLeft
     
     Set PositionTop = XDoc.createElement("top")
-    PositionTop.Text = Sheet1.subTop2
+    PositionTop.text = Sheet1.subTop2
     lowerPosition.appendChild PositionTop
     
     Set PositionWidth = XDoc.createElement("width")
-    PositionWidth.Text = Sheet1.subWidth2
+    PositionWidth.text = Sheet1.subWidth2
     lowerPosition.appendChild PositionWidth
     
     Set PositionHeight = XDoc.createElement("height")
-    PositionHeight.Text = Sheet1.subHeight2
+    PositionHeight.text = Sheet1.subHeight2
     lowerPosition.appendChild PositionHeight
     
 ' PRETTY PRINT RAW OUTPUT '

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<general>
-		<pptPath>D:\Applications\pptGenerator\pptGenerator\output.pptx</pptPath>
-		<backgroundImagePath>D:\Applications\pptGenerator\pptGenerator\background\greenscreenWithBlackCover.png</backgroundImagePath>
-		<chineseLyricOnly enabled="0">
+		<pptPath>D:\DDownload\PPTGenerator1.5\output.pptx</pptPath>
+		<backgroundImagePath>D:\DDownload\PPTGenerator1.5\background\extra3.png</backgroundImagePath>
+		<chineseLyricOnly enabled="-1">
 			<oneTextField enabled="-1">
 				<numberOfRow>3</numberOfRow>
 			</oneTextField>
@@ -11,11 +11,11 @@
 	</general>
 	<main>
 		<font>
-			<fontName>FZZhunYuan-M02</fontName>
+			<fontName>Microsoft Yahei</fontName>
 			<fontColorR>248</fontColorR>
 			<fontColorG>248</fontColorG>
 			<fontColorB>248</fontColorB>
-			<fontSize>45</fontSize>
+			<fontSize>66</fontSize>
 			<fontBold>-1</fontBold>
 			<fontBorder enabled="0">
 				<colorR>0</colorR>
@@ -25,10 +25,10 @@
 			</fontBorder>
 		</font>
 		<shadow enabled="-1"></shadow>
-		<fontSpacing>0</fontSpacing>
+		<fontSpacing>6</fontSpacing>
 		<lineSpacingBefore>0</lineSpacingBefore>
-		<lineSpacingAfter>0</lineSpacingAfter>
-		<lineSpacingBetween>1.1</lineSpacingBetween>
+		<lineSpacingAfter>8</lineSpacingAfter>
+		<lineSpacingBetween>1.07</lineSpacingBetween>
 		<glow enabled="-1">
 			<size>8</size>
 			<transparency>0</transparency>
@@ -38,25 +38,25 @@
 		</glow>
 		<upperPosition>
 			<left>0</left>
-			<top>423.7172</top>
+			<top>75.5</top>
 			<width>960</width>
 			<height>90</height>
 		</upperPosition>
 		<lowerPosition>
 			<left>0</left>
-			<top>228.25</top>
+			<top>235.06</top>
 			<width>960</width>
 			<height>90</height>
 		</lowerPosition>
 	</main>
 	<sub>
 		<font>
-			<fontName>National Park Heavy</fontName>
-			<fontColorR>248</fontColorR>
-			<fontColorG>248</fontColorG>
-			<fontColorB>248</fontColorB>
-			<fontSize>32</fontSize>
-			<fontBold>0</fontBold>
+			<fontName>Avenir Next LT Pro</fontName>
+			<fontColorR>0</fontColorR>
+			<fontColorG>0</fontColorG>
+			<fontColorB>0</fontColorB>
+			<fontSize>36</fontSize>
+			<fontBold>-1</fontBold>
 			<fontBorder enabled="0">
 				<colorR>0</colorR>
 				<colorG>0</colorG>
@@ -65,7 +65,7 @@
 			</fontBorder>
 		</font>
 		<shadow enabled="-1"></shadow>
-		<fontSpacing>0</fontSpacing>
+		<fontSpacing>1</fontSpacing>
 		<lineSpacingBefore>0</lineSpacingBefore>
 		<lineSpacingAfter>0</lineSpacingAfter>
 		<lineSpacingBetween>1</lineSpacingBetween>
@@ -78,13 +78,13 @@
 		</glow>
 		<upperPosition>
 			<left>0</left>
-			<top>470.8878</top>
+			<top>179.33</top>
 			<width>960</width>
 			<height>50.9</height>
 		</upperPosition>
 		<lowerPosition>
 			<left>0</left>
-			<top>306.8572</top>
+			<top>323.93</top>
 			<width>960</width>
 			<height>50.9</height>
 		</lowerPosition>
