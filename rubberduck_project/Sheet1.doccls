@@ -759,6 +759,7 @@ Private Sub btnGeneratePinyin_Click()
         
     Next
     
+    outputString = Replace(outputString, "ha li lu ya", "ha le lu ya")
     txtpy.text = outputString
 End Sub
 
