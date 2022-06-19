@@ -1,5 +1,4 @@
 
-
 function transs(){
 	var cc=document.form2.code3.value; // the field to convert
 	var str='';
